@@ -1,114 +1,135 @@
 /* ==========================================================================
-   INVESTOR DAILY SUMMIT 2026 - MAIN STYLESHEET
-   Accurately crafted to match 1440px visual desktop specifications in First UI Brief
+   BERITASATU MALAM APRESIASI 2026 - MAIN STYLESHEET
+   Accurately crafted with Black & Red Figma Design System Palette
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
-   1. Design Tokens & CSS Variables (Figma System Palette)
+   1. Design Tokens & CSS Variables (Black & Red System Palette)
    -------------------------------------------------------------------------- */
 :root {
-  /* Neutral Palette */
-  --neutral-1: #ffffff;
-  --neutral-2: #fcfcfc;
-  --neutral-3: #f5f5f5;
-  --neutral-4: #f0f0f0;
-  --neutral-5: #d9d9d9;
-  --neutral-6: #bfbfbf;
-  --neutral-7: #8c8c8c;
-  --neutral-8: #595959;
-  --neutral-9: #454545;
-  --neutral-10: #262626;
-  --neutral-11: #1f1f1f;
-  --neutral-12: #141414;
-  --neutral-13: #000000;
+  /* Black Palette (13 levels) */
+  --black-1: #ffffff;
+  --black-2: #fcfcfc;
+  --black-3: #f5f5f5;
+  --black-4: #f0f0f0;
+  --black-5: #d9d9d9;
+  --black-6: #bfbfbf;
+  --black-7: #8c8c8c;
+  --black-8: #595959;
+  --black-9: #454545;
+  --black-10: #262626;
+  --black-11: #1f1f1f;
+  --black-12: #141414;
+  --black-13: #000000;
 
-  /* Primary 1 Palette (Yellow Token System) */
-  --yellow-1: #fefbed;
-  --yellow-2: #fcf6d3;
-  --yellow-3: #faeeb1;
-  --yellow-4: #f8e68c;
-  --yellow-5: #f6df6a;
-  --yellow-6: #f4d849;
-  --yellow-7: #cfb83e;
-  --yellow-8: #ad9934;
-  --yellow-9: #8b7b2a;
-  --yellow-10: #6e6121;
+  /* Neutral Palette Aliases */
+  --neutral-1: var(--black-1);
+  --neutral-2: var(--black-2);
+  --neutral-3: var(--black-3);
+  --neutral-4: var(--black-4);
+  --neutral-5: var(--black-5);
+  --neutral-6: var(--black-6);
+  --neutral-7: var(--black-7);
+  --neutral-8: var(--black-8);
+  --neutral-9: var(--black-9);
+  --neutral-10: var(--black-10);
+  --neutral-11: var(--black-11);
+  --neutral-12: var(--black-12);
+  --neutral-13: var(--black-13);
 
-  --primary-1-1: var(--yellow-1);
-  --primary-1-2: var(--yellow-2);
-  --primary-1-3: var(--yellow-3);
-  --primary-1-4: var(--yellow-4);
-  --primary-1-5: var(--yellow-5);
-  --primary-1-6: var(--yellow-6);
-  /* Dominant Yellow #fff100 */
-  --primary-1-7: var(--yellow-7);
-  --primary-1-8: var(--yellow-8);
-  --primary-1-9: var(--yellow-9);
-  --primary-1-10: var(--yellow-10);
+  /* Red Palette (10 levels) */
+  --red-1: #f7e7e7;
+  --red-2: #ebc4c4;
+  --red-3: #db9696;
+  --red-4: #cb6565;
+  --red-5: #bb3636;
+  --red-6: #ac0a0a;
+  --red-7: #920909;
+  --red-8: #7a0707;
+  --red-9: #620606;
+  --red-10: #4d0505;
 
-  /* Primary 2 Palette (Green Token System) */
-  --green-1: #edf5ea;
-  --green-2: #d3e6cd;
-  --green-3: #b1d3a5;
-  --green-4: #8cbe7b;
-  --green-5: #6aab54;
-  --green-6: #49982e;
-  --green-7: #3e8127;
-  --green-8: #346c21;
-  --green-9: #2a571a;
-  --green-10: #214415;
+  /* Primary 1 Palette (Red Token System) */
+  --primary-1-1: var(--red-1);
+  --primary-1-2: var(--red-2);
+  --primary-1-3: var(--red-3);
+  --primary-1-4: var(--red-4);
+  --primary-1-5: var(--red-5);
+  --primary-1-6: var(--red-6);
+  --primary-1-7: var(--red-7);
+  --primary-1-8: var(--red-8);
+  --primary-1-9: var(--red-9);
+  --primary-1-10: var(--red-10);
 
-  --primary-2-1: var(--green-1);
-  --primary-2-2: var(--green-2);
-  --primary-2-3: var(--green-3);
-  --primary-2-4: var(--green-4);
-  --primary-2-5: var(--green-5);
-  --primary-2-6: var(--green-6);
-  /* Dominant Green #49982e */
-  --primary-2-7: var(--green-7);
-  --primary-2-8: var(--green-8);
-  --primary-2-9: var(--green-9);
-  --primary-2-10: var(--green-10);
+  /* Primary 2 Palette (Black / Dark Scale Aliases) */
+  --primary-2-1: var(--black-1);
+  --primary-2-2: var(--black-2);
+  --primary-2-3: var(--black-3);
+  --primary-2-4: var(--black-4);
+  --primary-2-5: var(--black-5);
+  --primary-2-6: var(--black-6);
+  --primary-2-7: var(--black-7);
+  --primary-2-8: var(--black-8);
+  --primary-2-9: var(--black-9);
+  --primary-2-10: var(--black-10);
 
-  /* Semantic Theme Variables Mapped to Palette - Base Yellow-6 */
-  --bg-page: var(--yellow-6);
-  /* Base: Yellow-6 #fff100 */
-  --bg-section-alt: var(--yellow-1);
-  /* Soft contrast tint #fffee6 */
-  --bg-card: var(--yellow-2);
-  /* Card container #fffcc2 */
-  --bg-card-gradient: linear-gradient(135deg, var(--yellow-5) 0%, var(--yellow-6) 100%);
-  --bg-pill: var(--green-6);
-  --bg-pill-active: var(--green-6);
+  /* Backward Compatibility Aliases for Yellow & Green */
+  --yellow-1: var(--red-1);
+  --yellow-2: var(--red-2);
+  --yellow-3: var(--red-3);
+  --yellow-4: var(--red-4);
+  --yellow-5: var(--red-5);
+  --yellow-6: var(--red-6);
+  --yellow-7: var(--red-7);
+  --yellow-8: var(--red-8);
+  --yellow-9: var(--red-9);
+  --yellow-10: var(--red-10);
 
-  --text-primary: var(--green-6);
-  /* Tulisan di area yellow-6 menggunakan green-6 */
-  --text-secondary: var(--green-7);
-  /* Subjudul / text sekunder menggunakan green-7 */
-  --text-muted: var(--green-8);
-  --text-dark: var(--green-10);
+  --green-1: var(--red-1);
+  --green-2: var(--red-2);
+  --green-3: var(--red-3);
+  --green-4: var(--red-4);
+  --green-5: var(--red-5);
+  --green-6: var(--red-6);
+  --green-7: var(--red-7);
+  --green-8: var(--red-8);
+  --green-9: var(--red-9);
+  --green-10: var(--red-10);
 
-  --accent-cyan: var(--green-6);
-  --accent-light: var(--green-4);
-  --accent-blue: var(--green-6);
-  --accent-glow: rgba(73, 152, 46, 0.35);
-  --border-divider: rgba(73, 152, 46, 0.22);
-  --border-subtle: rgba(73, 152, 46, 0.35);
+  /* Semantic Theme Variables - Dark Base */
+  --bg-page: var(--black-13);
+  --bg-section-alt: var(--black-12);
+  --bg-card: var(--black-11);
+  --bg-card-gradient: linear-gradient(135deg, var(--black-11) 0%, var(--black-12) 100%);
+  --bg-pill: var(--red-2);
+  --bg-pill-active: var(--red-6);
+
+  --text-primary: var(--black-1);
+  --text-secondary: var(--black-5);
+  --text-muted: var(--black-7);
+  --text-dark: var(--black-13);
+
+  --accent-cyan: var(--red-6);
+  --accent-light: var(--red-4);
+  --accent-blue: var(--red-6);
+  --accent-glow: rgba(172, 10, 10, 0.35);
+  --border-divider: rgba(255, 255, 255, 0.12);
+  --border-subtle: rgba(172, 10, 10, 0.25);
 
   /* Navbar & Footer Component Tokens */
-  --navbar-bg: var(--yellow-6);
-  --navbar-cta-bg: var(--green-6);
+  --navbar-bg: transparent;
+  --navbar-cta-bg: var(--red-6);
   --navbar-cta-text: #ffffff;
-  --navbar-cta-hover-bg: var(--green-7);
+  --navbar-cta-hover-bg: var(--red-7);
   --navbar-cta-hover-text: #ffffff;
-  --navbar-cta-hover-outline: var(--green-6);
-  --footer-bg: var(--yellow-6);
-  --footer-text-color: var(--green-8);
-  --footer-social-bg: var(--green-6);
+  --navbar-cta-hover-outline: var(--red-6);
+  --footer-bg: var(--black-13);
+  --footer-text-color: var(--black-5);
+  --footer-social-bg: var(--black-10);
   --footer-social-color: #ffffff;
-  --footer-border-color: rgba(73, 152, 46, 0.25);
+  --footer-border-color: rgba(255, 255, 255, 0.12);
 
-  --font-sans: 'Manrope', 'Montserrat', 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --font-sans: 'Manrope', 'Montserrat', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   --font-serif: 'Playfair Display', Georgia, Cambria, 'Times New Roman', Times, serif;
 
   --container-max-width: 1440px;

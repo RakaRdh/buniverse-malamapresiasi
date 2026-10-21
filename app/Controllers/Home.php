@@ -140,86 +140,106 @@ class Home extends BaseController
                 $site['socials'] = $live['site']['socials'] ?? [];
             }
 
-            // Define EMF Green & Yellow Palette Theme Properties
-            $emfThemeTokens = [
-                '--yellow-1' => '#fefbed',
-                '--yellow-2' => '#fcf6d3',
-                '--yellow-3' => '#faeeb1',
-                '--yellow-4' => '#f8e68c',
-                '--yellow-5' => '#f6df6a',
-                '--yellow-6' => '#f4d849',
-                '--yellow-7' => '#cfb83e',
-                '--yellow-8' => '#ad9934',
-                '--yellow-9' => '#8b7b2a',
-                '--yellow-10' => '#6e6121',
-                '--green-1' => '#edf5ea',
-                '--green-2' => '#d3e6cd',
-                '--green-3' => '#b1d3a5',
-                '--green-4' => '#8cbe7b',
-                '--green-5' => '#6aab54',
-                '--green-6' => '#49982e',
-                '--green-7' => '#3e8127',
-                '--green-8' => '#346c21',
-                '--green-9' => '#2a571a',
-                '--green-10' => '#214415',
-                // Semantic Tokens: BASE ADALAH KUNING (yellow-6: #f4d849)
-                '--bg-page' => '#f4d849',
-                '--bg-section-alt' => '#fefbed',
-                '--bg-card' => '#fcf6d3',
-                '--text-primary' => '#49982e',
-                '--text-secondary' => '#3e8127',
-                '--text-dark' => '#49982e',
-                '--accent-cyan' => '#49982e',
-                '--accent-blue' => '#49982e',
-                '--accent-light' => '#8cbe7b',
-                '--navbar-cta-bg' => '#49982e',
-                '--navbar-cta-text' => '#ffffff',
-                '--navbar-cta-hover-bg' => '#3e8127',
-                '--navbar-cta-hover-text' => '#ffffff',
-                '--navbar-cta-hover-outline' => '#49982e',
-                '--footer-bg' => '#f4d849',
-                '--footer-social-bg' => '#49982e',
-                '--footer-social-color' => '#ffffff',
-                '--footer-text-color' => '#346c21',
-                '--footer-border-color' => 'rgba(73, 152, 46, 0.25)',
+            // Define Malam Apresiasi (MAP) Black & Red Palette Theme Properties
+            $mapThemeTokens = [
+                // Black Palette (13 levels)
+                '--black-1'  => '#ffffff',
+                '--black-2'  => '#fcfcfc',
+                '--black-3'  => '#f5f5f5',
+                '--black-4'  => '#f0f0f0',
+                '--black-5'  => '#d9d9d9',
+                '--black-6'  => '#bfbfbf',
+                '--black-7'  => '#8c8c8c',
+                '--black-8'  => '#595959',
+                '--black-9'  => '#454545',
+                '--black-10' => '#262626',
+                '--black-11' => '#1f1f1f',
+                '--black-12' => '#141414',
+                '--black-13' => '#000000',
+
+                // Neutral Aliases
+                '--neutral-1'  => '#ffffff',
+                '--neutral-2'  => '#fcfcfc',
+                '--neutral-3'  => '#f5f5f5',
+                '--neutral-4'  => '#f0f0f0',
+                '--neutral-5'  => '#d9d9d9',
+                '--neutral-6'  => '#bfbfbf',
+                '--neutral-7'  => '#8c8c8c',
+                '--neutral-8'  => '#595959',
+                '--neutral-9'  => '#454545',
+                '--neutral-10' => '#262626',
+                '--neutral-11' => '#1f1f1f',
+                '--neutral-12' => '#141414',
+                '--neutral-13' => '#000000',
+
+                // Red Palette (10 levels)
+                '--red-1'  => '#f7e7e7',
+                '--red-2'  => '#ebc4c4',
+                '--red-3'  => '#db9696',
+                '--red-4'  => '#cb6565',
+                '--red-5'  => '#bb3636',
+                '--red-6'  => '#ac0a0a',
+                '--red-7'  => '#920909',
+                '--red-8'  => '#7a0707',
+                '--red-9'  => '#620606',
+                '--red-10' => '#4d0505',
+
+                // Primary 1 (Red Aliases)
+                '--primary-1-1'  => '#f7e7e7',
+                '--primary-1-2'  => '#ebc4c4',
+                '--primary-1-3'  => '#db9696',
+                '--primary-1-4'  => '#cb6565',
+                '--primary-1-5'  => '#bb3636',
+                '--primary-1-6'  => '#ac0a0a',
+                '--primary-1-7'  => '#920909',
+                '--primary-1-8'  => '#7a0707',
+                '--primary-1-9'  => '#620606',
+                '--primary-1-10' => '#4d0505',
+
+                // Semantic Tokens: BASE ADALAH HITAM (black-13: #000000)
+                '--bg-page'                  => '#000000',
+                '--bg-section-alt'           => '#141414',
+                '--bg-card'                  => '#1f1f1f',
+                '--bg-card-gradient'         => 'linear-gradient(135deg, #1f1f1f 0%, #141414 100%)',
+                '--bg-pill'                  => '#ebc4c4',
+                '--bg-pill-active'           => '#ac0a0a',
+                '--text-primary'             => '#ffffff',
+                '--text-secondary'           => '#d9d9d9',
+                '--text-muted'               => '#8c8c8c',
+                '--text-dark'                => '#000000',
+                '--accent-cyan'              => '#ac0a0a',
+                '--accent-blue'              => '#ac0a0a',
+                '--accent-light'             => '#cb6565',
+                '--accent-glow'              => 'rgba(172, 10, 10, 0.35)',
+                '--border-divider'           => 'rgba(255, 255, 255, 0.12)',
+                '--border-subtle'            => 'rgba(172, 10, 10, 0.25)',
+                '--navbar-bg'                => 'transparent',
+                '--navbar-cta-bg'            => '#ac0a0a',
+                '--navbar-cta-text'          => '#ffffff',
+                '--navbar-cta-hover-bg'      => '#920909',
+                '--navbar-cta-hover-text'    => '#ffffff',
+                '--navbar-cta-hover-outline' => '#ac0a0a',
+                '--footer-bg'                => '#000000',
+                '--footer-social-bg'         => '#262626',
+                '--footer-social-color'      => '#ffffff',
+                '--footer-text-color'        => '#d9d9d9',
+                '--footer-border-color'      => 'rgba(255, 255, 255, 0.12)',
             ];
 
-            // If BackendCMS returned live theme_properties, merge them EXCEPT for protected EMF theme tokens
-            $protectedEmfTokens = [
-                '--footer-bg',
-                '--footer-social-bg',
-                '--footer-social-color',
-                '--footer-text-color',
-                '--footer-border-color',
-                '--bg-page',
-                '--bg-section-alt',
-                '--bg-card',
-                '--text-primary',
-                '--text-secondary',
-                '--text-dark',
-                '--accent-cyan',
-                '--accent-blue',
-                '--accent-light',
-                '--navbar-cta-bg',
-                '--navbar-cta-text',
-                '--navbar-cta-hover-bg',
-                '--navbar-cta-hover-text',
-                '--navbar-cta-hover-outline',
-            ];
-
+            // If BackendCMS returned live theme_properties, merge them
             if (!empty($live['theme_properties']) && is_array($live['theme_properties'])) {
                 foreach ($live['theme_properties'] as $tp) {
-                    if (!empty($tp['property']) && isset($tp['value'])) {
-                        if (!in_array($tp['property'], $protectedEmfTokens, true)) {
-                            $emfThemeTokens[$tp['property']] = $tp['value'];
-                        }
+                    $propKey = $tp['property'] ?? $tp['css_property'] ?? null;
+                    $propVal = $tp['value'] ?? $tp['css_value'] ?? null;
+                    if (!empty($propKey) && isset($propVal)) {
+                        $mapThemeTokens[$propKey] = $propVal;
                     }
                 }
             }
 
             // Convert to array of ['property' => ..., 'value' => ...]
             $themeProperties = [];
-            foreach ($emfThemeTokens as $prop => $val) {
+            foreach ($mapThemeTokens as $prop => $val) {
                 $themeProperties[] = ['property' => $prop, 'value' => $val];
             }
 
