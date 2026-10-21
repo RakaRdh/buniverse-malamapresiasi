@@ -1,139 +1,160 @@
-<section class="schedule-section" id="schedule">
-  <?= view('partials/section_decorations', ['sectionKey' => 'schedule', 'decorations' => $sectionDecorations ?? []]) ?>
-  <?= view('partials/custom_placements', ['sectionKey' => 'schedule', 'customPlacements' => $customPlacements ?? []]) ?>
+<?php
+/**
+ * Event Schedule Section for Malam Apresiasi
+ * Layout without Speaker tabs.
+ * Header bar matching Gambar 3:
+ * Red vertical bar + Event Schedule
+ * Dark rounded container with Calendar, Pin, and Clock icons from database
+ * Rundown item style matching IDS/EMF (Gambar 2):
+ * - Left column: Pill waktu berwarna merah dengan icon clock (e.g. 18:00 WIB)
+ * - Right column: Title session, Subtitle, dan Speaker card ber-background merah rounded
+ * - Divider baris tipis di antara item rundown (border-bottom)
+ * - Tanpa room pill
+ */
+
+// Format event date
+$eventDateStr = !empty($site['dates']) ? $site['dates'] : 'KAMIS, 20 NOVEMBER 2026';
+if (!empty($schedule['day_1']['label'])) {
+    $eventDateStr = strtoupper($schedule['day_1']['label']);
+} elseif (!empty($schedule['day_1']['date'])) {
+    $ts = strtotime($schedule['day_1']['date']);
+    if ($ts !== false) {
+        $dayNames = [
+            'Sunday' => 'MINGGU', 'Monday' => 'SENIN', 'Tuesday' => 'SELASA',
+            'Wednesday' => 'RABU', 'Thursday' => 'KAMIS', 'Friday' => 'JUMAT', 'Saturday' => 'SABTU'
+        ];
+        $monthNames = [
+            'January' => 'JANUARI', 'February' => 'FEBRUARI', 'March' => 'MARET',
+            'April' => 'APRIL', 'May' => 'MEI', 'June' => 'JUNI',
+            'July' => 'JULI', 'August' => 'AGUSTUS', 'September' => 'SEPTEMBER',
+            'October' => 'OKTOBER', 'November' => 'NOVEMBER', 'December' => 'DESEMBER'
+        ];
+        $dayEn = date('l', $ts);
+        $monthEn = date('F', $ts);
+        $dayId = $dayNames[$dayEn] ?? strtoupper($dayEn);
+        $monthId = $monthNames[$monthEn] ?? strtoupper($monthEn);
+        $eventDateStr = $dayId . ', ' . date('j', $ts) . ' ' . $monthId . ' ' . date('Y', $ts);
+    }
+}
+
+// Format venue
+$eventVenue = !empty($site['venue']) ? strtoupper($site['venue']) : 'BALLROOM 1, HOTEL MULIA SENAYAN';
+
+// Format time
+$eventTime = '18.00 WIB';
+if (!empty($schedule['day_1']['items'][0])) {
+    $firstItem = $schedule['day_1']['items'][0];
+    if (!empty($firstItem['start_time'])) {
+        $st = str_replace(':', '.', substr($firstItem['start_time'], 0, 5));
+        $eventTime = $st . ' WIB';
+    } elseif (!empty($firstItem['time'])) {
+        $eventTime = $firstItem['time'];
+    }
+}
+
+// Items list
+$scheduleItems = $schedule['day_1']['items'] ?? [];
+?>
+
+<section class="schedule-section map-schedule-section" id="schedule">
   <div class="container">
     
-    <!-- 1. Main Tabs Header: SCHEDULE vs SPEAKERS -->
-    <div class="tabs-container">
-      <div class="main-tabs" role="tablist">
-        <button class="main-tab-btn active" data-tab="schedule" role="tab" aria-selected="true">
-          SCHEDULE
-        </button>
-        <button class="main-tab-btn" data-tab="speakers" role="tab" aria-selected="false">
-          SPEAKERS
-        </button>
+    <!-- 1. Header with Red Accent Bar (Gambar 3) -->
+    <div class="map-schedule-header">
+      <div class="map-schedule-title-bar">
+        <span class="map-schedule-red-bar"></span>
+        <h2 class="map-schedule-title">Event Schedule</h2>
       </div>
     </div>
 
-    <!-- 2. Day Selector: Auto-hidden when SPEAKERS tab is selected -->
-    <?php
-      $formatDayButton = function($dateVal, $fallback) {
-        if (!empty($dateVal)) {
-          $ts = strtotime($dateVal);
-          if ($ts !== false) {
-            return date('F jS', $ts);
+    <!-- 2. Dark Rounded Info Bar: Date, Venue, Time (Gambar 3) -->
+    <div class="map-schedule-info-bar">
+      <div class="map-info-item">
+        <span class="map-info-icon">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="16" y1="2" x2="16" y2="6"></line>
+            <line x1="8" y1="2" x2="8" y2="6"></line>
+            <line x1="3" y1="10" x2="21" y2="10"></line>
+          </svg>
+        </span>
+        <span class="map-info-text"><?= esc($eventDateStr) ?></span>
+      </div>
+
+      <div class="map-info-item">
+        <span class="map-info-icon">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 0 1 0-5 2.5 2.5 0 0 1 0 5z"/>
+          </svg>
+        </span>
+        <span class="map-info-text"><?= esc($eventVenue) ?></span>
+      </div>
+
+      <div class="map-info-item">
+        <span class="map-info-icon">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+          </svg>
+        </span>
+        <span class="map-info-text"><?= esc($eventTime) ?></span>
+      </div>
+    </div>
+
+    <!-- 3. Schedule Rundown List (Style IDS & EMF per Gambar 2) -->
+    <div class="schedule-list map-schedule-list">
+      <?php if (!empty($scheduleItems)): ?>
+        <?php foreach ($scheduleItems as $item): 
+          // Format single start time or range
+          $timeDisplay = '';
+          if (!empty($item['start_time'])) {
+              $timeDisplay = substr($item['start_time'], 0, 5) . ' WIB';
+          } elseif (!empty($item['time'])) {
+              $timeDisplay = $item['time'];
           }
-          return $dateVal;
-        }
-        return $fallback;
-      };
+        ?>
+          <div class="schedule-row map-schedule-row <?= !empty($item['is_break']) ? 'is-break' : '' ?>">
+            
+            <!-- Kolom Waktu (Kiri): Pill Merah bulat lonjong -->
+            <div class="schedule-meta-col map-meta-col">
+              <div class="schedule-time map-schedule-time">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
+                <span><?= esc($timeDisplay) ?></span>
+              </div>
+            </div>
 
-      $formatDayDetail = function($dateVal, $fallback) {
-        if (!empty($dateVal)) {
-          $ts = strtotime($dateVal);
-          if ($ts !== false) {
-            return date('l, F jS, Y', $ts);
-          }
-          return $dateVal;
-        }
-        return $fallback;
-      };
+            <!-- Kolom Konten (Kanan): Judul, Subtitle, Speaker Card -->
+            <div class="schedule-content-col map-content-col">
+              <h3 class="session-title map-session-title">
+                <span class="session-title-main"><?= esc($item['title'] ?? '') ?></span>
+              </h3>
 
-      // Determine default active day based on current date in Indonesia (WIB)
-      $nowWib = (new \DateTime('now', new \DateTimeZone('Asia/Jakarta')))->format('Y-m-d');
-      $day2DateRaw = $schedule['day_2']['date'] ?? '';
-      $day2Ts = !empty($day2DateRaw) ? strtotime($day2DateRaw) : strtotime('2026-10-08');
-      $day2Date = ($day2Ts !== false) ? date('Y-m-d', $day2Ts) : '2026-10-08';
+              <?php if (!empty($item['subtitle'])): ?>
+                <div class="session-subtitle map-session-subtitle">
+                  <?= esc($item['subtitle']) ?>
+                </div>
+              <?php endif; ?>
 
-      // Only activate Day 2 if today is exactly Day 2. If before or already passed, default to Day 1.
-      $defaultActiveDay = ($nowWib === $day2Date) ? 'day_2' : 'day_1';
-      
-      $day1HeadingText = $formatDayDetail($schedule['day_1']['date'] ?? '', 'Tuesday, November 10th, 2026');
-      $day2HeadingText = $formatDayDetail($schedule['day_2']['date'] ?? '', 'Wednesday, November 11th, 2026');
+              <?php if (!empty($item['speakers'])): ?>
+                <div class="plenary-speaker-grid map-speaker-grid">
+                  <?php foreach ($item['speakers'] as $spk): ?>
+                    <?= view('partials/schedule/speaker_card', ['speaker' => $spk]) ?>
+                  <?php endforeach; ?>
+                </div>
+              <?php endif; ?>
+            </div>
 
-      $activeDayNum = ($defaultActiveDay === 'day_2') 
-        ? ($schedule['day_2']['label'] ?? 'Day 2') 
-        : ($schedule['day_1']['label'] ?? 'Day 1');
-      $activeDayDetail = ($defaultActiveDay === 'day_2') ? $day2HeadingText : $day1HeadingText;
-    ?>
-    <div class="day-selector-wrapper" id="daySelectorWrapper">
-      <div class="day-selector" role="tablist">
-        <button class="day-btn <?= ($defaultActiveDay === 'day_1') ? 'active' : '' ?>" 
-                data-day="day_1" 
-                data-heading-label="<?= esc($schedule['day_1']['label'] ?? 'Day 1') ?>" 
-                data-heading-detail="<?= esc($day1HeadingText) ?>" 
-                role="tab">
-          <?= esc($formatDayButton($schedule['day_1']['date'] ?? '', 'November 10th')) ?>
-        </button>
-        <button class="day-btn <?= ($defaultActiveDay === 'day_2') ? 'active' : '' ?>" 
-                data-day="day_2" 
-                data-heading-label="<?= esc($schedule['day_2']['label'] ?? 'Day 2') ?>" 
-                data-heading-detail="<?= esc($day2HeadingText) ?>" 
-                role="tab">
-          <?= esc($formatDayButton($schedule['day_2']['date'] ?? '', 'November 11th')) ?>
-        </button>
-      </div>
-    </div>
-
-    <!-- Active Day Banner Bar (Matching Gambar 1 & Gambar 4 Ref) -->
-    <div class="schedule-day-title-wrap" id="scheduleDayTitleWrap">
-      <div class="schedule-day-banner">
-        <span class="schedule-day-badge" id="scheduleDayBadge"><?= esc($activeDayNum) ?></span>
-        <span class="schedule-day-date" id="scheduleDayDate"><?= esc($activeDayDetail) ?></span>
-      </div>
-    </div>
-
-    <!-- 3. Schedule Tab Content (Day 1 & Day 2 lists) -->
-    <div class="schedule-list-view" id="scheduleListView">
-      
-      <!-- Day 1 Schedule -->
-      <div class="day-schedule-content" data-day="day_1" style="display: <?= ($defaultActiveDay === 'day_1') ? 'block' : 'none' ?>;">
-        <div class="schedule-list">
-          <?php 
-          $hasOpenedSpeakerCard = false;
-          foreach ($schedule['day_1']['items'] as $item): 
-            $hasSpeakers = !empty($item['speaker_ids']) || (!empty($item['rooms']) && array_filter($item['rooms'], fn($r) => !empty($r['sessions'])));
-            $isDefaultOpen = false;
-            if ($hasSpeakers && !$hasOpenedSpeakerCard) {
-              $isDefaultOpen = true;
-              $hasOpenedSpeakerCard = true;
-            }
-          ?>
-            <?= view('partials/schedule/schedule_item', [
-              'item'          => $item,
-              'allSpeakers'   => $speakers,
-              'isDefaultOpen' => $isDefaultOpen,
-            ]) ?>
-          <?php endforeach; ?>
+          </div>
+        <?php endforeach; ?>
+      <?php else: ?>
+        <div class="map-schedule-empty">
+          <p>Rundown jadwal sedang dipersiapkan.</p>
         </div>
-      </div>
-
-      <!-- Day 2 Schedule -->
-      <div class="day-schedule-content" data-day="day_2" style="display: <?= ($defaultActiveDay === 'day_2') ? 'block' : 'none' ?>;">
-        <div class="schedule-list">
-          <?php 
-          $hasOpenedSpeakerCard2 = false;
-          foreach ($schedule['day_2']['items'] as $item): 
-            $hasSpeakers2 = !empty($item['speaker_ids']) || (!empty($item['rooms']) && array_filter($item['rooms'], fn($r) => !empty($r['sessions'])));
-            $isDefaultOpen2 = false;
-            if ($hasSpeakers2 && !$hasOpenedSpeakerCard2) {
-              $isDefaultOpen2 = true;
-              $hasOpenedSpeakerCard2 = true;
-            }
-          ?>
-            <?= view('partials/schedule/schedule_item', [
-              'item'          => $item,
-              'allSpeakers'   => $speakers,
-              'isDefaultOpen' => $isDefaultOpen2,
-            ]) ?>
-          <?php endforeach; ?>
-        </div>
-      </div>
-
+      <?php endif; ?>
     </div>
-
-    <!-- 4. Standalone SPEAKERS Tab View (§9A) -->
-    <?= view('partials/schedule/speakers_tab_view', ['speakers' => $speakers]) ?>
 
   </div>
 </section>

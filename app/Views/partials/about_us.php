@@ -1,94 +1,52 @@
-<?php
-$overviewData = $overview ?? $economicModel ?? [];
-$paragraphs = $overviewData['paragraphs'] ?? [];
-?>
-<section class="about-us-section editorial-section" id="about-us">
-  <?= view('partials/section_decorations', ['sectionKey' => 'about-us', 'decorations' => $sectionDecorations ?? []]) ?>
-  <?= view('partials/custom_placements', ['sectionKey' => 'about-us', 'customPlacements' => $customPlacements ?? []]) ?>
-  
-  <div class="about-ribbon-showcase-wrap" aria-hidden="true">
-    <div class="about-ribbon-showcase">
-      <?php /* Inner Framed Image: Selalu tegak (upright) dengan transisi rotate masuk searah jarum jam */ ?>
-      <div class="about-ribbon-viewport">
-        <div class="about-ribbon-rotor" id="aboutRibbonRotor">
-          <div class="about-ribbon-slide slide-0 active" data-index="0">
-            <img src="<?= base_url('assets/img/image1.png') ?>" alt="Event Showcase 1" loading="lazy">
-          </div>
-          <div class="about-ribbon-slide slide-1" data-index="1">
-            <img src="<?= base_url('assets/img/image2.jpg') ?>" alt="Event Showcase 2" loading="lazy">
-          </div>
-          <div class="about-ribbon-slide slide-2" data-index="2">
-            <img src="<?= base_url('assets/img/image3.jpg') ?>" alt="Event Showcase 3" loading="lazy">
-          </div>
-          <div class="about-ribbon-slide slide-3" data-index="3">
-            <img src="<?= base_url('assets/img/speakers.png') ?>" alt="Event Showcase 4" loading="lazy">
-          </div>
-        </div>
-      </div>
-
-      <?php /* Overlaid Ribbon Frame: Step rotation clockwise */ ?>
-      <div class="about-ribbon-frame" id="aboutRibbonFrame">
-        <img src="<?= base_url('assets/img/ribbon.png') ?>" alt="Ribbon Frame" class="about-ribbon-img">
-      </div>
-    </div>
-  </div>
-
+<section class="about-us-section" id="about-us">
   <div class="container">
-    <div class="about-us-grid editorial-grid">
-      
-      <?php /* Kolom Kiri Dikosongkan untuk tempat Ribbon Frame */ ?>
-      <div class="about-us-left-spacer" aria-hidden="true"></div>
-
-      <?php /* Kolom Kanan: Posisi Asli Tetap di Dalam Container */ ?>
-      <div class="about-us-right editorial-right">
-        <div class="topic-badge">
-          <?= esc(!empty($overviewData['badge']) && $overviewData['badge'] !== "INDONESIA'S ECONOMIC MODEL" ? $overviewData['badge'] : "ABOUT US") ?>
+    <div class="about-us-grid">
+      <div class="about-us-left">
+        <h2 class="section-title about-us-title">
+          <span>BeritaSatu Malam Apresiasi 2026</span>
+        </h2>
+        <div class="about-us-body">
+          <p>
+            Beritasatu.com kembali menggelar Malam Apresiasi Beritasatu. Apresiasi yang sudah digelar sejak tahun 2022 ini menjadi momentum penting bagi pembangunan nasional. Di tengah tantangan global dan dinamika nasional yang terus berkembang. Pemerintah daerah serta pelaku memainkan peran sentral dalam menjaga stabilitas ekonomi, mendorong inovasi, sekaligus mempercepat pembangunan yang inklusif dan berkelanjutan.
+          </p>
+          <p>
+            Penghargaan ini diselenggarakan sebagai bentuk apresiasi atas dedikasi, inovasi, dan pencapaian para kepala daerah, pelaku industri serta para pemimpin yang telah menunjukkan kinerja luar biasa di bidangnya. Mereka telah berhasil menciptakan dampak nyata yang dirasakan oleh masyarakat sekaligus sukses juga menjadi agen perubahan.
+          </p>
+          <p>
+            Terdapat 8 kategori yang dibagi ke dalam Governance, 4 kategori dan Private Sectors 4 kategori. Yaitu; Kategori Inovasi Teknologi dan Layanan Publik, Inspirasi Sosial dan Kesejahteraan, Inspirasi Kreatif dan Budaya, dan Inspirasi Wirausaha dan Ekonomi Kreatif.
+          </p>
+          <p>
+            Empat kategori private sectors adalah; Inovasi Teknologi dan Digital, Inspirasi Sosial dan Kepemimpinan, Creative Branding dan Positif Impact, serta Inspirasi Wirausaha dan Ekonomi Kreatif.
+          </p>
+          <p>
+            Harapannya, dengan apresiasi ini, bisa menjadi ‘suntikan’ motivasi bagi para penerima dan inspirasi bagi yang lain.
+          </p>
         </div>
 
-        <div class="editorial-paragraphs">
-          <?php foreach ($paragraphs as $p): ?>
-            <p><?= strip_tags($p, '<span><em><strong><i><b><u><br>') ?></p>
-          <?php endforeach; ?>
+        <?php /* 3 Stats items */ ?>
+        <div class="map-stats-row" id="aboutStatsRow">
+          <div class="map-stat-col">
+            <div class="map-stat-number" data-target="8" data-prefix="">8</div>
+            <div class="map-stat-label">Categories</div>
+          </div>
+          <div class="map-stat-divider"></div>
+          <div class="map-stat-col">
+            <div class="map-stat-number" data-target="27" data-prefix="&plusmn; ">&plusmn; 27</div>
+            <div class="map-stat-label">Winners</div>
+          </div>
+          <div class="map-stat-divider"></div>
+          <div class="map-stat-col">
+            <div class="map-stat-number" data-target="150" data-prefix="&plusmn;">&plusmn;150</div>
+            <div class="map-stat-label">Audiences</div>
+          </div>
         </div>
       </div>
 
+      <div class="about-us-right">
+        <div class="about-us-img-wrap">
+          <img src="<?= base_url('assets/img/bsma.webp') ?>" alt="BeritaSatu Malam Apresiasi 2026" class="about-us-img">
+        </div>
+      </div>
     </div>
   </div>
 </section>
-
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-  var frame = document.getElementById('aboutRibbonFrame');
-  var slides = document.querySelectorAll('.about-ribbon-slide');
-  if (!frame || slides.length === 0) return;
-
-  var currentStep = 0;
-  var currentIndex = 0;
-  var total = slides.length;
-  var stepAngle = 90; // 90 derajat per step searah jarum jam (clockwise)
-
-  setInterval(function () {
-    currentStep++;
-    var prevIndex = currentIndex;
-    var nextIndex = currentStep % total;
-    var rotationDeg = currentStep * stepAngle;
-
-    // Ribbon berputar clockwise
-    frame.style.transform = 'rotate(' + rotationDeg + 'deg)';
-
-    // Gambar lama keluar berputar clockwise (+70deg)
-    slides[prevIndex].classList.remove('active');
-    slides[prevIndex].classList.add('leaving');
-
-    // Gambar baru masuk berputar clockwise mendarat tegak di 0deg (view asli)
-    slides[nextIndex].classList.remove('leaving');
-    slides[nextIndex].classList.add('active');
-
-    setTimeout(function () {
-      slides[prevIndex].classList.remove('leaving');
-    }, 900);
-
-    currentIndex = nextIndex;
-  }, 3500);
-});
-</script>

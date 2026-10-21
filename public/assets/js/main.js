@@ -538,25 +538,18 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       }
 
-      // Check if within hero section
+      // Check if within top of hero section
       const isMobile = window.innerWidth <= 768;
-      if (isMobile && heroSection) {
-        const heroBottom = heroSection.offsetHeight - 40;
-        if (currentScrollY < heroBottom) {
-          siteHeader.classList.add('header-transparent');
-        } else {
-          siteHeader.classList.remove('header-transparent');
-        }
-        siteHeader.classList.remove('header-hero-transparent');
-      } else {
-        siteHeader.classList.remove('header-transparent');
+      const scrollThreshold = 30;
 
-        // Desktop: Transparent background (preserving blur) at top of hero section, colored when scrolled slightly
-        if (currentScrollY <= 20) {
-          siteHeader.classList.add('header-hero-transparent');
-        } else {
-          siteHeader.classList.remove('header-hero-transparent');
-        }
+      if (currentScrollY <= scrollThreshold) {
+        siteHeader.classList.add('header-hero-transparent');
+        siteHeader.classList.add('header-transparent');
+        siteHeader.classList.remove('scrolled');
+      } else {
+        siteHeader.classList.remove('header-hero-transparent');
+        siteHeader.classList.remove('header-transparent');
+        siteHeader.classList.add('scrolled');
       }
 
       // Don't hide if mobile menu is open
@@ -1272,5 +1265,60 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
   });
+
+  // 13. Number Counter Animation for About Us Stats
+  const initStatsCounterAnimation = () => {
+    const statsSection = document.getElementById('aboutStatsRow') || document.getElementById('about-us');
+    if (!statsSection) return;
+
+    let animated = false;
+    const runCounters = () => {
+      if (animated) return;
+      animated = true;
+
+      const counterEls = document.querySelectorAll('.map-stat-number[data-target]');
+      counterEls.forEach((el) => {
+        const target = parseInt(el.getAttribute('data-target'), 10) || 0;
+        const prefix = el.getAttribute('data-prefix') || '';
+        const duration = 1800; // ms
+        const startTime = performance.now();
+
+        const updateCounter = (now) => {
+          const elapsed = now - startTime;
+          const progress = Math.min(elapsed / duration, 1);
+          // Ease out cubic
+          const easeProgress = 1 - Math.pow(1 - progress, 3);
+          const currentVal = Math.floor(easeProgress * target);
+
+          el.innerHTML = prefix + currentVal;
+
+          if (progress < 1) {
+            requestAnimationFrame(updateCounter);
+          } else {
+            el.innerHTML = prefix + target;
+          }
+        };
+
+        requestAnimationFrame(updateCounter);
+      });
+    };
+
+    if ('IntersectionObserver' in window) {
+      const observer = new IntersectionObserver((entries, obs) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            runCounters();
+            obs.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.25 });
+
+      observer.observe(statsSection);
+    } else {
+      runCounters();
+    }
+  };
+
+  initStatsCounterAnimation();
 });
 

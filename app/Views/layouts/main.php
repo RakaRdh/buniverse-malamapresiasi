@@ -50,38 +50,24 @@
     <?php /* 2. Hero Section */ ?>
     <?= $this->include('partials/hero') ?>
 
-    <?php /* 3. About Us Section (Energi & Mineral Festival) */ ?>
-    <?= $this->include('partials/about_us') ?>
+    <?php /* Wrapper with background bg.webp placed right under hero, covering all sections including footer */ ?>
+    <div class="content-bg-wrapper">
+      <?php /* 3. Overview Section */ ?>
+      <?= $this->include('partials/overview') ?>
 
-    <?php /* 4. Live Streaming (YouTube Embed) Section */ ?>
-    <?= $this->include('partials/livestream') ?>
+      <?php /* 4. About Us Section (BeritaSatu Malam Apresiasi 2026) */ ?>
+      <?= $this->include('partials/about_us') ?>
 
-    <?php /* 5. Schedule & Speakers Section */ ?>
-    <?= $this->include('partials/schedule/index') ?>
+      <?php /* 5. Categories Section (Governance & Private Sector) */ ?>
+      <?= $this->include('partials/categories') ?>
 
-    <?php /* 5.1 Highlights (YouTube) Section */ ?>
-    <?php if (!empty($highlights['is_active']) && !empty($highlights['items'])): ?>
-      <?= $this->include('partials/highlights') ?>
-    <?php endif; ?>
+      <?php /* 6. Event Schedule Section */ ?>
+      <?= $this->include('partials/schedule/index') ?>
 
-    <?php /* 6. Gallery Section */ ?>
-    <?= $this->include('partials/gallery') ?>
-
-    <?php /* 6.1 Overview (Summary Cards) Section */ ?>
-    <?= $this->include('partials/summary') ?>
-
-    <?php /* 7. Related News Section */ ?>
-    <?= $this->include('partials/related_news') ?>
-
-    <?php /* 8. Sponsor & Partners Section */ ?>
-    <?= $this->include('partials/sponsors') ?>
-
-    <?php /* 8.1 Locations & Floor Plan Section */ ?>
-    <?= $this->include('partials/locations') ?>
+      <?php /* 8. Footer (Transparent inside wrapper, sitting on top of the bottom rotated background) */ ?>
+      <?= $this->include('partials/footer') ?>
+    </div>
   </main>
-
-  <?php /* 8. Footer */ ?>
-  <?= $this->include('partials/footer') ?>
 
   <?php /* 9. Speaker Detail Modal */ ?>
   <?= $this->include('partials/speaker_modal') ?>

@@ -36,7 +36,8 @@ class Home extends BaseController
         // Attempt live synchronization with BackendCMS REST API for Malam Apresiasi Event
         $cacheKey = 'cms_live_event_malam-apresiasi-2026';
         $backupKey = 'cms_live_event_malam-apresiasi-2026_bak';
-        $noCache = $this->request->getGet('nocache') !== null || $this->request->getGet('refresh') !== null;
+        $isDev = (ENVIRONMENT === 'development');
+        $noCache = $isDev || $this->request->getGet('nocache') !== null || $this->request->getGet('refresh') !== null;
         $live = $noCache ? null : cache($cacheKey);
 
         if ($live === null) {
