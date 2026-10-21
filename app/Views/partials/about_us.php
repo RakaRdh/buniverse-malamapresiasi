@@ -1,10 +1,13 @@
 <section class="about-us-section" id="about-us">
   <div class="container">
+    <div class="about-us-header">
+      <h2 class="section-title about-us-title">
+        <span>BeritaSatu Malam Apresiasi 2026</span>
+      </h2>
+    </div>
+
     <div class="about-us-grid">
       <div class="about-us-left">
-        <h2 class="section-title about-us-title">
-          <span>BeritaSatu Malam Apresiasi 2026</span>
-        </h2>
         <div class="about-us-body">
           <p>
             Beritasatu.com kembali menggelar Malam Apresiasi Beritasatu. Apresiasi yang sudah digelar sejak tahun 2022 ini menjadi momentum penting bagi pembangunan nasional. Di tengah tantangan global dan dinamika nasional yang terus berkembang. Pemerintah daerah serta pelaku memainkan peran sentral dalam menjaga stabilitas ekonomi, mendorong inovasi, sekaligus mempercepat pembangunan yang inklusif dan berkelanjutan.

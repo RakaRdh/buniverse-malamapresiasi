@@ -470,7 +470,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // ScrollSpy: Update active state on nav-links based on current visible section
     const navLinks = document.querySelectorAll('.site-nav .nav-link');
     const updateActiveNav = () => {
-      const scrollPos = (window.pageYOffset || document.documentElement.scrollTop || 0) + 160;
+      const scrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
+      const scrollPos = scrollY + 120; // 120px threshold below header
       const sections = [];
 
       navLinks.forEach(link => {
@@ -478,7 +479,15 @@ document.addEventListener('DOMContentLoaded', () => {
         if (href && href.startsWith('#') && href.length > 1) {
           const targetEl = document.querySelector(href);
           if (targetEl) {
-            sections.push({ link, targetEl, top: targetEl.offsetTop, bottom: targetEl.offsetTop + targetEl.offsetHeight });
+            const rect = targetEl.getBoundingClientRect();
+            const absoluteTop = rect.top + scrollY;
+            const height = targetEl.offsetHeight || rect.height;
+            sections.push({
+              link,
+              targetEl,
+              top: absoluteTop,
+              bottom: absoluteTop + height
+            });
           }
         }
       });
@@ -497,8 +506,12 @@ document.addEventListener('DOMContentLoaded', () => {
         currentActiveLink = sections[0].link;
       }
 
-      navLinks.forEach(link => {
-        if (link === currentActiveLink) {
+      // Update both header navbar and footer navigation links
+      const allTargetLinks = document.querySelectorAll('.site-nav .nav-link, .map-footer-nav .map-footer-nav-link');
+      const activeHref = currentActiveLink ? currentActiveLink.getAttribute('href') : null;
+
+      allTargetLinks.forEach(link => {
+        if (activeHref && link.getAttribute('href') === activeHref) {
           link.classList.add('active');
         } else {
           link.classList.remove('active');

@@ -213,7 +213,7 @@ button {
   left: 0;
   width: 100%;
   z-index: 1000;
-  background-color: var(--red-6, #ac0a0a);
+  background-color: var(--navbar-bg, var(--red-6, #ac0a0a));
   padding: 16px 0;
   transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.25s ease;
   will-change: transform;
@@ -233,8 +233,21 @@ button {
 }
 
 .site-header.scrolled {
-  background-color: #381113 !important;
+    /* background merah semi-transparan */
+  background-color: rgb(9, 6, 7, 0.55) !important;
+
+  /* efek blur kaca */
+  -webkit-backdrop-filter: blur(12px) saturate(160%);
+  backdrop-filter: blur(12px) saturate(160%);
+
+  /* border tipis agar terlihat seperti tepi kaca */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+
 }
+
+/* .site-header.scrolled {
+  background-color: var(--red-7, #920909) !important;
+} */
 
 .header-inner {
   display: flex;
@@ -303,13 +316,27 @@ button {
 }
 
 .nav-link {
+  position: relative;
   font-size: 16px;
-  font-weight: 500;
+  font-weight: 600;
   color: #ffffff;
   opacity: 0.85;
   text-decoration: none;
-  transition: opacity 0.2s ease, color 0.2s ease;
+  transition: opacity 0.25s ease, color 0.25s ease;
   white-space: nowrap;
+  padding: 6px 0;
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 0;
+  height: 3px;
+  background-color: #ffffff;
+  border-radius: 2px;
+  transition: width 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .nav-link:hover,
@@ -319,13 +346,18 @@ button {
   text-decoration: none;
 }
 
+.nav-link:hover::after,
+.nav-link.active::after {
+  width: 100%;
+}
+
 /* Get Tickets CTA */
 .btn-ticket {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background-color: var(--green-6, #49982e);
-  color: #ffffff;
+  background-color: var(--navbar-cta-bg, var(--red-6, #ac0a0a));
+  color: var(--navbar-cta-text, #ffffff);
   font-size: 16px;
   font-weight: 700;
   padding: 10px 24px;
@@ -338,7 +370,7 @@ button {
   outline-offset: 4px;
   /* Outerline hover logic dari IDS: outline-color + background-color + box-shadow tanpa translateY */
   transition: background-color 0.25s ease, color 0.25s ease, outline-color 0.25s ease, box-shadow 0.25s ease;
-  box-shadow: 0 4px 15px rgba(73, 152, 46, 0.35);
+  box-shadow: 0 4px 15px rgba(172, 10, 10, 0.35);
 }
 
 .btn-ticket-mobile {
@@ -346,11 +378,11 @@ button {
 }
 
 .btn-ticket:hover {
-  background-color: var(--green-7, #3e8127);
-  color: #ffffff;
+  background-color: var(--navbar-cta-hover-bg, var(--red-7, #920909));
+  color: var(--navbar-cta-hover-text, #ffffff);
   transform: none !important;
-  outline-color: var(--green-6, #49982e);
-  box-shadow: 0 6px 20px rgba(73, 152, 46, 0.45);
+  outline-color: var(--navbar-cta-hover-outline, var(--red-6, #ac0a0a));
+  box-shadow: 0 6px 20px rgba(172, 10, 10, 0.45);
 }
 
 .nav-toggle {
@@ -432,6 +464,7 @@ button {
   z-index: 0;
 }
 
+/* Commented out per user request: bg.webp rotated 180deg at bottom of page
 .content-bg-wrapper::after {
   content: "";
   position: absolute;
@@ -447,6 +480,7 @@ button {
   pointer-events: none;
   z-index: 0;
 }
+*/
 
 .content-bg-wrapper>* {
   position: relative;
@@ -475,10 +509,18 @@ button {
   position: absolute;
   left: 0;
   bottom: 0;
-  width: 75%;
-  /* 3/4 nya kata/kalimat */
-  height: 2px;
+  width: 120px;
+  height: 3px;
   background-color: #ac0a0a;
+  border-radius: 2px;
+}
+
+.overview-section,
+.about-us-section,
+.categories-section,
+.map-schedule-section,
+.schedule-section {
+  scroll-margin-top: 80px;
 }
 
 /* --------------------------------------------------------------------------
@@ -494,7 +536,7 @@ button {
   display: grid;
   grid-template-columns: 1.1fr 0.9fr;
   gap: 48px;
-  align-items: center;
+  align-items: flex-start;
 }
 
 .overview-left {
@@ -519,7 +561,7 @@ button {
 .overview-right {
   display: flex;
   justify-content: flex-end;
-  align-items: center;
+  align-items: flex-start;
 }
 
 .overview-img-wrap {
@@ -616,6 +658,10 @@ button {
   flex-shrink: 0;
 }
 
+.about-us-header {
+  margin-bottom: 0px;
+}
+
 .about-us-right {
   display: flex;
   justify-content: flex-end;
@@ -676,7 +722,7 @@ button {
 
 .category-heading {
   font-family: var(--font-sans);
-  font-size: 22px;
+  font-size: 24px;
   font-weight: 700;
   color: #ffffff;
   letter-spacing: 0.5px;
@@ -702,9 +748,9 @@ button {
 .category-pill {
   display: inline-block;
   background-color: #ebc4c4;
-  color: #ac0a0a;
+  color: var(--red-10, #ac0a0a);
   font-family: var(--font-sans);
-  font-size: 12px;
+  font-size: 16px;
   font-weight: 700;
   letter-spacing: 0.3px;
   padding: 10px 22px;
@@ -727,6 +773,7 @@ button {
   .about-us-right {
     order: 1;
     justify-content: center;
+    padding-top: 0;
   }
 
   .overview-left,
@@ -782,7 +829,8 @@ button {
   position: relative;
   width: 100%;
   padding: 60px 0 80px 0;
-  background: transparent;
+  /* background: linear-gradient(180deg, #090607 0%, #090607 80%, #381113 100%); */
+  background: linear-gradient(180deg, #090607 0%, #090607 80%, var(--red-7, #920909) 100%);
 }
 
 .map-schedule-header {
@@ -1047,8 +1095,10 @@ button {
   position: relative;
   z-index: 2;
   width: 100%;
-  background: transparent !important;
-  background-color: transparent !important;
+  /* background: #381113 !important;
+  background-color: #381113 !important; */
+  background: var(--red-7, #920909) !important;
+  background-color: var(--red-7, #920909) !important;
   overflow: visible;
   padding: 60px 0 35px 0;
   box-sizing: border-box;
@@ -1095,17 +1145,23 @@ button {
 }
 
 .map-footer-nav-link {
+  position: relative;
   font-family: var(--font-sans);
   font-size: 14px;
   font-weight: 700;
   color: #ffffff;
   letter-spacing: 0.8px;
   text-decoration: none;
-  transition: color 0.2s ease;
+  transition: opacity 0.2s ease, color 0.2s ease;
+  padding: 4px 0;
+  opacity: 0.85;
 }
 
-.map-footer-nav-link:hover {
-  color: var(--red-4, #cb6565);
+.map-footer-nav-link:hover,
+.map-footer-nav-link.active {
+  opacity: 1;
+  color: #ffffff;
+  text-decoration: none;
 }
 
 /* Social Buttons */
@@ -1130,8 +1186,8 @@ button {
 }
 
 .map-social-btn:hover {
-  background-color: var(--red-6, #ac0a0a);
-  border-color: var(--red-6, #ac0a0a);
+  background-color: #090607;
+  border-color: #090607;
   color: #ffffff;
 }
 
@@ -1185,7 +1241,7 @@ button {
 .map-copyright {
   font-family: var(--font-sans);
   font-size: 13px;
-  color: #8c8c8c;
+  color: #fff;
   margin: 0;
 }
 
@@ -1814,7 +1870,7 @@ button {
   z-index: 1;
   width: clamp(420px, 94vw, 980px);
   min-height: 420px;
-  background: linear-gradient(180deg, var(--red-5, #bb3636) 0%, var(--red-7, #920909) 100%);
+  background: linear-gradient(180deg, var(--red-7, #920909) 0%, var(--red-10, #4d0505) 100%);
   border: none;
   border-radius: 36px;
   box-shadow: 0 35px 90px rgba(0, 0, 0, 0.45);
@@ -3250,7 +3306,8 @@ button {
 /* Footer bottom styling */
 .site-footer {
   padding: 0 0 40px 0;
-  background-color: transparent !important;
+  /* background-color: #381113 !important; */
+  background-color: var(--red-7, #920909) !important;
   border-top: none;
   font-size: 12px;
 }

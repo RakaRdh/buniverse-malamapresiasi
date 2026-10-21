@@ -15,7 +15,7 @@
  */
 $socials = !empty($site['socials']) ? $site['socials'] : [];
 $fbUrl = !empty($socials['facebook']) ? $socials['facebook'] : 'https://facebook.com';
-$xUrl = !empty($socials['twitter']) ? $socials['twitter'] : (!empty($socials['x']) ? $socials['x'] : 'https://x.com');
+$xUrl = !empty($socials['twitter']) ? $socials['twitter'] : (!empty($socials['x']) ? $socials['x'] : 'https://x.com/btvidofficial');
 $igUrl = !empty($socials['instagram']) ? $socials['instagram'] : 'https://instagram.com';
 $ytUrl = !empty($socials['youtube']) ? $socials['youtube'] : 'https://youtube.com';
 $ttUrl = !empty($socials['tiktok']) ? $socials['tiktok'] : 'https://tiktok.com';
@@ -36,9 +36,10 @@ $ttUrl = !empty($socials['tiktok']) ? $socials['tiktok'] : 'https://tiktok.com';
         <!-- Footer Nav Links -->
         <nav class="map-footer-nav" aria-label="Footer Navigation">
           <a href="#home" class="map-footer-nav-link">HOME</a>
-          <a href="#overview" class="map-footer-nav-link">EVENT</a>
-          <a href="#news" class="map-footer-nav-link">NEWS</a>
-          <a href="#gallery" class="map-footer-nav-link">GALLERY</a>
+          <a href="#overview" class="map-footer-nav-link">OVERVIEW</a>
+          <a href="#about-us" class="map-footer-nav-link">ABOUT US</a>
+          <a href="#categories" class="map-footer-nav-link">CATEGORIES</a>
+          <a href="#schedule" class="map-footer-nav-link">SCHEDULE</a>
         </nav>
       </div>
 

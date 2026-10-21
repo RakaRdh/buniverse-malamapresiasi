@@ -40,20 +40,30 @@ if (!empty($schedule['day_1']['label'])) {
 // Format venue
 $eventVenue = !empty($site['venue']) ? strtoupper($site['venue']) : 'BALLROOM 1, HOTEL MULIA SENAYAN';
 
-// Format time
-$eventTime = '18.00 WIB';
-if (!empty($schedule['day_1']['items'][0])) {
-    $firstItem = $schedule['day_1']['items'][0];
-    if (!empty($firstItem['start_time'])) {
-        $st = str_replace(':', '.', substr($firstItem['start_time'], 0, 5));
-        $eventTime = $st . ' WIB';
-    } elseif (!empty($firstItem['time'])) {
-        $eventTime = $firstItem['time'];
+// Items list from database schedule day_1
+$scheduleItems = !empty($schedule['day_1']['items']) ? $schedule['day_1']['items'] : (!empty($schedule['day_1']['sessions']) ? $schedule['day_1']['sessions'] : []);
+
+// Format time: ambil dari jadwal jam pertama banget di data schedule
+$eventTime = '';
+if (!empty($scheduleItems)) {
+    // Cari waktu mulai paling awal dari sesi pertama yang memiliki waktu
+    foreach ($scheduleItems as $sess) {
+        if (!empty($sess['start_time'])) {
+            $st = str_replace(':', '.', substr(trim($sess['start_time']), 0, 5));
+            $eventTime = $st . ' WIB';
+            break;
+        } elseif (!empty($sess['time'])) {
+            // Jika format time e.g. "06:00 PM - 07:00 PM" atau "18:00 WIB"
+            $tParts = explode('-', $sess['time']);
+            $firstPart = trim($tParts[0]);
+            $eventTime = $firstPart;
+            break;
+        }
     }
 }
-
-// Items list
-$scheduleItems = $schedule['day_1']['items'] ?? [];
+if (empty($eventTime)) {
+    $eventTime = '18.00 WIB';
+}
 ?>
 
 <section class="schedule-section map-schedule-section" id="schedule">

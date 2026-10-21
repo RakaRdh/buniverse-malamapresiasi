@@ -18,9 +18,10 @@
           <?php
             $navItems = !empty($site['nav_items']) ? $site['nav_items'] : [
                 ['label' => 'Home', 'url' => '#home'],
-                ['label' => 'Event', 'url' => '#overview'],
-                ['label' => 'News', 'url' => '#news'],
-                ['label' => 'Gallery', 'url' => '#gallery'],
+                ['label' => 'Overview', 'url' => '#overview'],
+                ['label' => 'About Us', 'url' => '#about-us'],
+                ['label' => 'Categories', 'url' => '#categories'],
+                ['label' => 'Schedule', 'url' => '#schedule'],
             ];
             foreach ($navItems as $idx => $item):
           ?>
