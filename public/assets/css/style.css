@@ -49,6 +49,18 @@
   --red-9: #620606;
   --red-10: #4d0505;
 
+  /* Gold Palette (10 levels) */
+  --gold-1: #faf6ef;
+  --gold-2: #f2e8d9;
+  --gold-3: #e7d7ba;
+  --gold-4: #dcc49a;
+  --gold-5: #d2b27c;
+  --gold-6: #c8a15f;
+  --gold-7: #aa8951;
+  --gold-8: #8e7243;
+  --gold-9: #725c36;
+  --gold-10: #5a482b;
+
   /* Primary 1 Palette (Red Token System) */
   --primary-1-1: var(--red-1);
   --primary-1-2: var(--red-2);
@@ -56,7 +68,7 @@
   --primary-1-4: var(--red-4);
   --primary-1-5: var(--red-5);
   --primary-1-6: var(--red-6);
-  --primary-1-7: var(--red-7);
+  --primary-1-7: var(--gold-6);
   --primary-1-8: var(--red-8);
   --primary-1-9: var(--red-9);
   --primary-1-10: var(--red-10);
@@ -80,7 +92,7 @@
   --yellow-4: var(--red-4);
   --yellow-5: var(--red-5);
   --yellow-6: var(--red-6);
-  --yellow-7: var(--red-7);
+  --yellow-7: var(--gold-6);
   --yellow-8: var(--red-8);
   --yellow-9: var(--red-9);
   --yellow-10: var(--red-10);
@@ -91,7 +103,7 @@
   --green-4: var(--red-4);
   --green-5: var(--red-5);
   --green-6: var(--red-6);
-  --green-7: var(--red-7);
+  --green-7: var(--gold-6);
   --green-8: var(--red-8);
   --green-9: var(--red-9);
   --green-10: var(--red-10);
@@ -120,7 +132,7 @@
   --navbar-bg: transparent;
   --navbar-cta-bg: var(--red-6);
   --navbar-cta-text: #ffffff;
-  --navbar-cta-hover-bg: var(--red-7);
+  --navbar-cta-hover-bg: var(--gold-6);
   --navbar-cta-hover-text: #ffffff;
   --navbar-cta-hover-outline: var(--red-6);
   --footer-bg: var(--black-13);
@@ -246,7 +258,7 @@ button {
 }
 
 /* .site-header.scrolled {
-  background-color: var(--red-7, #920909) !important;
+  background-color: var(--gold-6, #c8a15f) !important;
 } */
 
 .header-inner {
@@ -378,7 +390,7 @@ button {
 }
 
 .btn-ticket:hover {
-  background-color: var(--navbar-cta-hover-bg, var(--red-7, #920909));
+  background-color: var(--navbar-cta-hover-bg, var(--gold-6, #c8a15f));
   color: var(--navbar-cta-hover-text, #ffffff);
   transform: none !important;
   outline-color: var(--navbar-cta-hover-outline, var(--red-6, #ac0a0a));
@@ -511,7 +523,7 @@ button {
   bottom: 0;
   width: 120px;
   height: 3px;
-  background-color: #ac0a0a;
+  background-color: var(--gold-6, #c8a15f);
   border-radius: 2px;
 }
 
@@ -747,8 +759,8 @@ button {
 
 .category-pill {
   display: inline-block;
-  background-color: #ebc4c4;
-  color: var(--red-10, #ac0a0a);
+  background-color: var(--gold-2, #c8b08a);
+  color: var(--gold-10, #ac0a0a);
   font-family: var(--font-sans);
   font-size: 16px;
   font-weight: 700;
@@ -769,16 +781,36 @@ button {
     gap: 36px;
   }
 
-  .overview-right,
-  .about-us-right {
+  /* Overview Mobile: Tulisan Overview + P di atas, foto di bawahnya */
+  .overview-left {
     order: 1;
+  }
+
+  .overview-right {
+    order: 2;
     justify-content: center;
     padding-top: 0;
   }
 
-  .overview-left,
+  /* About Us Mobile: Judul & P (order 1), Foto (order 2), Stats (order 3) */
   .about-us-left {
+    display: contents;
+  }
+
+  .about-us-body {
+    order: 1;
+    margin-bottom: 0;
+  }
+
+  .about-us-right {
     order: 2;
+    justify-content: center;
+    padding-top: 0;
+  }
+
+  .map-stats-row {
+    order: 3;
+    padding-top: 0;
   }
 
   .categories-grid {
@@ -830,7 +862,7 @@ button {
   width: 100%;
   padding: 60px 0 80px 0;
   /* background: linear-gradient(180deg, #090607 0%, #090607 80%, #381113 100%); */
-  background: linear-gradient(180deg, #090607 0%, #090607 80%, var(--red-7, #920909) 100%);
+  background: linear-gradient(180deg, #090607 0%, #090607 80%, #47351D 100%);
 }
 
 .map-schedule-header {
@@ -847,7 +879,7 @@ button {
   display: inline-block;
   width: 5px;
   height: 34px;
-  background-color: var(--red-6, #ac0a0a);
+  background-color: var(--gold-8, #8e7243);
   border-radius: 2px;
   flex-shrink: 0;
 }
@@ -869,7 +901,7 @@ button {
   justify-content: flex-start;
   flex-wrap: wrap;
   gap: 36px 60px;
-  background-color: var(--red-7, #bb3636);
+  background-color: var(--gold-6, #c8a15f);
   border-radius: 12px;
   padding: 18px 32px;
   margin-bottom: 36px;
@@ -938,7 +970,7 @@ button {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  background-color: var(--red-7, #bb3636) !important;
+  background-color: var(--gold-6, #c8a15f) !important;
   color: #ffffff !important;
   border: none;
   border-radius: var(--radius-pill, 9999px);
@@ -1000,7 +1032,7 @@ button {
   display: flex;
   align-items: center;
   gap: 16px;
-  background-color: var(--red-7, #920909);
+  background-color: var(--gold-6, #c8a15f);
   border: none;
   border-radius: 14px;
   padding: 14px 18px;
@@ -1014,7 +1046,7 @@ button {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, var(--red-7, #920909) 0%, var(--red-10, #4d0505) 100%);
+  background: linear-gradient(180deg, var(--gold-6, #c8a15f) 0%, var(--gold-10, #b49a66) 100%);
   opacity: 0;
   transition: opacity 280ms ease;
   z-index: 1;
@@ -1033,7 +1065,7 @@ button {
   border-radius: 50%;
   overflow: hidden;
   flex-shrink: 0;
-  background: linear-gradient(180deg, #090607 0%, #BB3636 100%);
+  background: linear-gradient(180deg, #090607 0%, #C8A15F 100%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1097,8 +1129,8 @@ button {
   width: 100%;
   /* background: #381113 !important;
   background-color: #381113 !important; */
-  background: var(--red-7, #920909) !important;
-  background-color: var(--red-7, #920909) !important;
+  background: #47351D !important;
+  background-color: #47351D !important;
   overflow: visible;
   padding: 60px 0 35px 0;
   box-sizing: border-box;
@@ -1747,7 +1779,7 @@ button {
   width: 100%;
   min-width: 0;
   min-height: 124px;
-  background-color: var(--red-7, #920909);
+  background-color: var(--gold-6, #c8a15f);
   border: none;
   border-radius: var(--radius-md, 16px);
   padding: 16px 20px;
@@ -1771,7 +1803,7 @@ button {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, var(--red-7, #920909) 0%, var(--red-10, #4d0505) 100%);
+  background: linear-gradient(180deg, var(--gold-6, #c8a15f) 0%, var(--gold-10, #b49a66) 100%);
   opacity: 0;
   transition: opacity 280ms ease;
   z-index: 1;
@@ -1792,7 +1824,7 @@ button {
   overflow: hidden;
   flex-shrink: 0;
   border: none;
-  background: linear-gradient(180deg, #090607 0%, #BB3636 100%);
+  background: linear-gradient(180deg, #090607 0%, #C8A15F 100%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1870,7 +1902,7 @@ button {
   z-index: 1;
   width: clamp(420px, 94vw, 980px);
   min-height: 420px;
-  background: linear-gradient(180deg, var(--red-7, #920909) 0%, var(--red-10, #4d0505) 100%);
+  background: linear-gradient(180deg, var(--gold-6, #c8a15f) 0%, var(--gold-10, #4d0505) 100%);
   border: none;
   border-radius: 36px;
   box-shadow: 0 35px 90px rgba(0, 0, 0, 0.45);
@@ -3307,7 +3339,7 @@ button {
 .site-footer {
   padding: 0 0 40px 0;
   /* background-color: #381113 !important; */
-  background-color: var(--red-7, #920909) !important;
+  background-color: #47351D !important;
   border-top: none;
   font-size: 12px;
 }
@@ -3755,9 +3787,11 @@ button {
     max-width: 82vw;
     height: 100vh;
     height: 100dvh;
-    background-color: rgba(172, 10, 10, 0.98);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    /* background merah semi-transparan */
+  background-color: rgb(9, 6, 7, 0.55) !important;
+
+  -webkit-backdrop-filter: blur(12px) saturate(160%);
+  backdrop-filter: blur(12px) saturate(160%);
     flex-direction: column;
     padding: 24px 22px 32px 22px;
     max-height: none;
@@ -5143,7 +5177,7 @@ button {
   width: 48px;
   height: 48px;
   border-radius: 12px;
-  background: var(--red-7, #920909);
+  background: var(--gold-6, #c8a15f);
   color: #ffffff;
   border: 1px solid rgba(255, 255, 255, 0.15);
   display: flex;

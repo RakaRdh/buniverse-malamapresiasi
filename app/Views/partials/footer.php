@@ -91,25 +91,25 @@ $ttUrl = !empty($socials['tiktok']) ? $socials['tiktok'] : 'https://tiktok.com';
     <!-- Media Partners Brands Row: btv, brtst, brtstdc, investor, id, jg, datasatu -->
     <div class="map-footer-brands-row">
       <div class="map-brand-item">
-        <img src="<?= base_url('assets/img/btv.webp') ?>" alt="BTV" class="map-brand-logo">
+        <a href="https://btv.id/" target="_blank"><img src="<?= base_url('assets/img/btv.webp') ?>" alt="BTV" class="map-brand-logo"></a>
       </div>
       <div class="map-brand-item">
-        <img src="<?= base_url('assets/img/brtst.webp') ?>" alt="BeritaSatu" class="map-brand-logo">
+        <a href="https://www.beritasatu.com/btv-live-streaming" target="_blank"><img src="<?= base_url('assets/img/brtst.webp') ?>" alt="BeritaSatu" class="map-brand-logo"></a>
       </div>
       <div class="map-brand-item">
-        <img src="<?= base_url('assets/img/brtstdc.webp') ?>" alt="BeritaSatu.com" class="map-brand-logo">
+        <a href="https://www.beritasatu.com" target="_blank"><img src="<?= base_url('assets/img/brtstdc.webp') ?>" alt="BeritaSatu.com" class="map-brand-logo"></a>
       </div>
       <div class="map-brand-item">
-        <img src="<?= base_url('assets/img/investor.webp') ?>" alt="Investor Daily Indonesia" class="map-brand-logo">
+        <a href="https://subscribe.investor.id/" target="_blank"><img src="<?= base_url('assets/img/id.webp') ?>" alt="Investor Daily Indonesia" class="map-brand-logo"></a>
       </div>
       <div class="map-brand-item">
-        <img src="<?= base_url('assets/img/id.webp') ?>" alt="Investor.id" class="map-brand-logo">
+        <a href="https://www.investor.id" target="_blank"><img src="<?= base_url('assets/img/investor.webp') ?>" alt="Investor.id" class="map-brand-logo"></a>
       </div>
       <div class="map-brand-item">
-        <img src="<?= base_url('assets/img/jg.webp') ?>" alt="Jakarta Globe" class="map-brand-logo">
+        <a href="https://www.jakartaglobe.id" target="_blank"><img src="<?= base_url('assets/img/jg.webp') ?>" alt="Jakarta Globe" class="map-brand-logo"></a>
       </div>
       <div class="map-brand-item">
-        <img src="<?= base_url('assets/img/datasatu.webp') ?>" alt="DataSatu.com" class="map-brand-logo">
+        <a href="https://www.datasatu.com" target="_blank"><img src="<?= base_url('assets/img/datasatu.webp') ?>" alt="DataSatu.com" class="map-brand-logo"></a>
       </div>
     </div>
 
