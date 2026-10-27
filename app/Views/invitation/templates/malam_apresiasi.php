@@ -1,14 +1,22 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title><?= esc($pageTitle ?? 'Undangan Resmi BeritaSatu Malam Apresiasi 2026') ?></title>
-    
+
     <!-- Google Fonts: Manrope (Body & Headings) & Playfair Display (Serif Accent) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600&display=swap"
+        rel="stylesheet">
+
+
+
+    <!-- AOS (Animate On Scroll) CSS -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 
     <style>
         :root {
@@ -39,919 +47,1624 @@
             --red-9: #620606;
             --red-10: #4d0505;
 
-            /* Gold / Accent */
-            --gold-6: #c8a15f;
-
-            /* Semantic tokens */
-            --bg-page: #090607;
-            --bg-canvas: #0e090b;
-            --bg-card: #191214;
-            --bg-card-subtle: #24171a;
-            --border-red: rgba(172, 10, 10, 0.35);
-            --border-subtle: rgba(255, 255, 255, 0.08);
-
+            /* Accent Tokens */
+            --border-red: rgba(172, 10, 10, 0.4);
+            --border-subtle: rgba(255, 255, 255, 0.1);
             --text-primary: #ffffff;
             --text-secondary: #d9d9d9;
             --text-muted: #8c8c8c;
-
-            --navbar-bg: #004b84; /* Deep Ocean Blue from user reference */
-            --navbar-active-bg: #f97316; /* Vibrant Orange Active Pill from reference */
 
             --font-sans: 'Manrope', -apple-system, BlinkMacSystemFont, sans-serif;
             --font-serif: 'Playfair Display', Georgia, serif;
         }
 
-        *, *::before, *::after {
+        * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
+            -webkit-tap-highlight-color: transparent;
         }
 
-        html, body {
-            height: 100%;
+        html,
+        body {
             width: 100%;
-            background-color: var(--bg-page);
-            color: var(--text-primary);
-            font-family: var(--font-sans);
+            height: 100%;
+            height: 100dvh;
             overflow: hidden;
-            -webkit-font-smoothing: antialiased;
+            background: #000000;
+            font-family: var(--font-sans);
+            color: var(--text-primary);
         }
 
-        /* Ambient desktop container */
-        .page-wrapper {
-            position: relative;
+        /* Outer Fullscreen Container: Gradient dari #000000 (atas) ke #4d0505 (bawah) */
+        .invitation-wrapper {
             width: 100%;
             height: 100%;
+            height: 100dvh;
             display: flex;
-            align-items: center;
             justify-content: center;
-            background: radial-gradient(circle at 50% 20%, rgba(172, 10, 10, 0.15) 0%, rgba(9, 6, 7, 0.95) 70%);
+            align-items: center;
+            background: linear-gradient(180deg, #000000 0%, #4d0505 100%);
+            position: relative;
         }
 
-        /* Portrait Phone/App Container Frame */
-        .invitation-frame {
-            position: relative;
+        /* Mobile Frame Simulator with Pure Dark Base */
+        .invitation-container {
             width: 100%;
             max-width: 440px;
             height: 100%;
-            max-height: 100%;
-            background-color: var(--bg-canvas);
-            box-shadow: 0 0 60px rgba(0, 0, 0, 0.85), 0 0 0 1px rgba(172, 10, 10, 0.25);
+            height: 100dvh;
+            position: relative;
+            background: #000000;
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.9);
             overflow: hidden;
             display: flex;
             flex-direction: column;
         }
 
-        @media (min-width: 768px) {
-            .invitation-frame {
-                height: 94vh;
-                max-height: 880px;
-                border-radius: 28px;
-            }
-        }
-
-        /* Vertical Full-Slide Snap Container */
+        /* Slides Viewport (Vertical Scroll Snap) - Covers full height down to the edge */
         .slides-viewport {
-            flex: 1;
             width: 100%;
             height: 100%;
+            height: 100dvh;
             overflow-y: scroll;
             overflow-x: hidden;
             scroll-snap-type: y mandatory;
             scroll-behavior: smooth;
             -webkit-overflow-scrolling: touch;
-            padding-bottom: 74px; /* Space for the bottom navbar */
+            padding-bottom: 0;
             box-sizing: border-box;
-        }
-
-        /* Hide Scrollbar for clean app experience */
-        .slides-viewport::-webkit-scrollbar {
-            display: none;
-        }
-        .slides-viewport {
+            background: #000000;
             -ms-overflow-style: none;
             scrollbar-width: none;
         }
 
-        /* Individual Snap Slide / Section */
+        .slides-viewport.is-locked {
+            overflow: hidden !important;
+            overflow-y: hidden !important;
+            touch-action: none;
+            scroll-snap-type: none;
+        }
+
+        .slides-viewport::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Individual Snap Slide:
+           Fills 100% of dynamic viewport seamlessly, background flows under floating navbar */
         .slide-section {
             width: 100%;
+            height: 100%;
+            height: 100dvh;
             min-height: 100%;
+            min-height: 100dvh;
             scroll-snap-align: start;
             scroll-snap-stop: always;
             position: relative;
             display: flex;
             flex-direction: column;
             justify-content: center;
-            padding: 32px 24px;
-            overflow-y: auto;
-            background: transparent;
+            padding: clamp(14px, 2.5vh, 24px) clamp(14px, 4vw, 20px) clamp(74px, 10vh, 84px);
+            box-sizing: border-box;
+            overflow-y: hidden;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
         }
 
-        /* Decorative subtle wave / background overlay */
-        .slide-section::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background-image: radial-gradient(circle at 80% 10%, rgba(172, 10, 10, 0.08) 0%, transparent 50%);
-            pointer-events: none;
-            z-index: 1;
+        .slide-section::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Sequential vertical background progression (Section 0 to 5) */
+        #section-cover {
+            background: #000000;
+        }
+
+        #section-detail {
+            background: linear-gradient(180deg, #000000 0%, #150202 100%);
+        }
+
+        #section-rundown {
+            background: linear-gradient(180deg, #150202 0%, #360303 100%);
+        }
+
+        #section-rsvp {
+            background: linear-gradient(180deg, #360303 0%, #610505 100%);
+        }
+
+        #section-contact {
+            background: linear-gradient(180deg, #610505 0%, #880808 100%);
+        }
+
+        #section-gratitude {
+            background: linear-gradient(180deg, #880808 0%, #ac0a0a 100%);
         }
 
         .slide-content {
             position: relative;
             z-index: 2;
             width: 100%;
-            max-width: 390px;
+            max-width: 395px;
             margin: 0 auto;
         }
 
-        /* Typography & Components */
-        .tag-pill {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 4px 14px;
-            border-radius: 50px;
-            font-size: 11px;
-            font-weight: 700;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-            background: rgba(172, 10, 10, 0.15);
-            border: 1px solid rgba(172, 10, 10, 0.35);
-            color: var(--red-4);
-            margin-bottom: 14px;
-        }
-
-        .slide-title {
-            font-size: 24px;
+        /* Section Headings */
+        .slide-section-title {
+            font-size: clamp(20px, 3vh, 26px);
             font-weight: 800;
-            line-height: 1.25;
             color: #ffffff;
-            margin-bottom: 8px;
-            letter-spacing: -0.3px;
-        }
-        .slide-title-serif {
-            font-family: var(--font-serif);
-            font-weight: 700;
+            text-align: center;
+            margin-bottom: clamp(10px, 1.8vh, 22px);
+            letter-spacing: -0.5px;
         }
 
-        .slide-desc {
-            font-size: 13px;
-            color: var(--text-secondary);
-            line-height: 1.6;
-            margin-bottom: 20px;
+        /* ================= 1. COVER SECTION ================= */
+        .cover-header-logo {
+            position: absolute;
+            top: clamp(14px, 2.5vh, 24px);
+            left: 20px;
+            z-index: 10;
         }
 
-        .info-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-subtle);
-            border-radius: 14px;
-            padding: 16px 18px;
-            margin-bottom: 12px;
-            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
-        }
-
-        .card-red-accent {
-            border-left: 3px solid var(--red-6);
-        }
-
-        /* ================= 1. COVER / OPENING SLIDE ================= */
-        .cover-logos {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 16px;
-            margin-bottom: 24px;
-        }
-        .brand-logo-main {
-            height: 30px;
+        .cover-header-logo img {
+            height: clamp(26px, 3.5vh, 32px);
             width: auto;
+            object-fit: contain;
+            filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.5));
+        }
+
+        .cover-hero-center {
+            text-align: center;
+            margin-bottom: clamp(12px, 2vh, 22px);
+            margin-top: 4px;
+        }
+
+        .cover-hero-img {
+            max-width: 360px;
+            width: 94%;
+            max-height: clamp(200px, 32vh, 280px);
+            height: auto;
+            margin: 0 auto;
+            display: block;
+            filter: drop-shadow(0 8px 25px rgba(0, 0, 0, 0.7));
             object-fit: contain;
         }
 
-        .cover-hero-box {
-            text-align: center;
-            padding: 24px 16px;
-            border-radius: 18px;
-            background: linear-gradient(180deg, rgba(36, 23, 26, 0.8) 0%, rgba(20, 13, 15, 0.95) 100%);
-            border: 1px solid var(--border-red);
-            margin-bottom: 24px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-        }
-
-        .cover-guest-label {
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            color: var(--text-muted);
-            margin-bottom: 6px;
-        }
-        .cover-guest-name {
-            font-size: 18px;
-            font-weight: 800;
-            color: #ffffff;
-            line-height: 1.35;
-            margin-bottom: 4px;
-        }
-        .cover-guest-inst {
-            font-size: 12px;
-            color: var(--red-4);
+        .cover-salutation-text {
+            font-size: clamp(13px, 1.8vh, 15px);
             font-weight: 500;
+            color: #f5f5f5;
+            text-align: center;
+            margin-bottom: clamp(8px, 1.4vh, 14px);
+            letter-spacing: 0.3px;
         }
 
-        .btn-swipe-down {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            width: 100%;
-            padding: 13px 20px;
-            background: linear-gradient(135deg, var(--red-6) 0%, var(--red-8) 100%);
-            color: #ffffff;
-            border-radius: 50px;
-            font-size: 13px;
+        /* Glassmorphism Guest Card: Container Merah #AC0A0A opacity 25% + backdrop-filter glass */
+        .cover-guest-card {
+            background: rgba(172, 10, 10, 0.25);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid rgba(172, 10, 10, 0.45);
+            border-radius: 14px;
+            padding: clamp(12px, 2vh, 18px) 16px;
+            text-align: center;
+            margin-bottom: clamp(10px, 1.6vh, 16px);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+        .cover-guest-name {
+            font-size: clamp(15px, 2.2vh, 18px);
             font-weight: 700;
-            letter-spacing: 0.5px;
+            color: #ffffff;
+            margin-bottom: 4px;
+            letter-spacing: -0.2px;
+        }
+
+        .cover-guest-role {
+            font-size: clamp(12px, 1.6vh, 13px);
+            font-weight: 500;
+            color: #f0f0f0;
+            line-height: 1.4;
+        }
+
+        /* Buka Undangan Button */
+        .btn-open-invitation {
+            display: block;
+            width: 100%;
+            background: #ac0a0a;
+            color: #ffffff;
+            font-size: clamp(13px, 1.8vh, 15px);
+            font-weight: 700;
+            text-align: center;
+            padding: clamp(10px, 1.6vh, 14px) 20px;
+            border-radius: 12px;
             border: none;
             cursor: pointer;
-            box-shadow: 0 4px 18px rgba(172, 10, 10, 0.45);
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-        .btn-swipe-down:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 22px rgba(172, 10, 10, 0.65);
+            box-shadow: 0 4px 18px rgba(172, 10, 10, 0.5);
+            transition: transform 0.2s ease, background 0.2s ease;
         }
 
-        /* ================= 2. DETAIL ACARA SLIDE ================= */
-        .event-detail-item {
+        .btn-open-invitation:active {
+            transform: scale(0.98);
+            background: #920909;
+        }
+
+        /* ================= 2. DETAIL SECTION (Waktu & Tempat) ================= */
+        .detail-info-list {
+            display: flex;
+            flex-direction: column;
+            gap: clamp(10px, 1.8vh, 16px);
+            margin-bottom: clamp(12px, 2vh, 20px);
+        }
+
+        .detail-info-row {
             display: flex;
             align-items: flex-start;
-            gap: 14px;
-            margin-bottom: 14px;
+            gap: 12px;
         }
-        .event-detail-item:last-child {
-            margin-bottom: 0;
-        }
-        .event-icon-box {
-            width: 38px;
-            height: 38px;
+
+        .detail-icon-box {
+            width: clamp(38px, 5vh, 44px);
+            height: clamp(38px, 5vh, 44px);
             border-radius: 10px;
-            background: rgba(172, 10, 10, 0.15);
-            border: 1px solid var(--border-red);
-            color: var(--red-4);
+            background: transparent;
+            border: 1.5px solid #ac0a0a;
             display: flex;
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
-        }
-        .event-detail-label {
-            font-size: 11px;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 2px;
-        }
-        .event-detail-val {
-            font-size: 14px;
-            font-weight: 700;
-            color: #ffffff;
-            line-height: 1.4;
+            color: #ac0a0a;
         }
 
-        /* ================= 3. RUNDOWN SLIDE ================= */
-        .rundown-timeline {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            max-height: 360px;
-            overflow-y: auto;
-            padding-right: 4px;
+        .detail-icon-box svg {
+            width: clamp(18px, 2.5vh, 20px);
+            height: clamp(18px, 2.5vh, 20px);
+            stroke: #ac0a0a;
+            stroke-width: 2;
         }
-        .rundown-timeline::-webkit-scrollbar {
-            width: 4px;
+
+        .detail-text-col {
+            flex: 1;
         }
-        .rundown-timeline::-webkit-scrollbar-thumb {
-            background: var(--red-8);
-            border-radius: 4px;
-        }
-        .rundown-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            background: var(--bg-card);
-            border: 1px solid var(--border-subtle);
-            border-radius: 10px;
-            padding: 10px 14px;
-        }
-        .rundown-time {
-            font-size: 12px;
+
+        .detail-info-label {
+            font-size: clamp(14px, 2vh, 16px);
             font-weight: 700;
-            color: var(--red-4);
-            background: rgba(172, 10, 10, 0.15);
-            padding: 4px 8px;
-            border-radius: 6px;
-            white-space: nowrap;
-        }
-        .rundown-title {
-            font-size: 13px;
-            font-weight: 600;
             color: #ffffff;
+            line-height: 1.3;
+        }
+
+        .detail-info-sub {
+            font-size: clamp(11.5px, 1.6vh, 13px);
+            font-weight: 400;
+            color: var(--text-secondary);
+            margin-top: 2px;
             line-height: 1.35;
         }
 
-        /* ================= 4. MAPS SLIDE ================= */
-        .maps-box {
+        .maps-iframe-wrapper {
             width: 100%;
-            height: 220px;
-            border-radius: 14px;
+            border-radius: 12px;
             overflow: hidden;
             border: 1px solid var(--border-red);
-            margin-bottom: 14px;
-            background: #1f1f1f;
-        }
-        .maps-box iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-        .btn-maps-action {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            width: 100%;
-            padding: 11px;
-            border-radius: 8px;
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            color: #ffffff;
-            font-size: 12px;
-            font-weight: 600;
-            text-decoration: none;
-            transition: background 0.2s;
-        }
-        .btn-maps-action:hover {
-            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+            height: clamp(160px, 24vh, 220px);
+            background: #141414;
         }
 
-        /* ================= 5. RSVP SLIDE ================= */
+        .maps-iframe-wrapper iframe {
+            width: 100%;
+            height: 100%;
+            border: 0;
+            display: block;
+        }
+
+        /* ================= 3. RUNDOWN SECTION ================= */
+        .rundown-table-card {
+            background: rgba(20, 13, 15, 0.7);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border-radius: 16px;
+            border: 1px solid rgba(172, 10, 10, 0.45);
+            overflow: hidden;
+            width: 100%;
+            max-height: clamp(370px, 58vh, 500px);
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.6);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .rundown-table-header {
+            display: grid;
+            grid-template-columns: 92px 1fr;
+            padding: 12px 16px;
+            background: linear-gradient(90deg, rgba(172, 10, 10, 0.85) 0%, rgba(122, 7, 7, 0.85) 100%);
+            font-weight: 700;
+            font-size: 13.5px;
+            color: #ffffff;
+            border-bottom: 1px solid rgba(172, 10, 10, 0.5);
+            letter-spacing: 0.3px;
+            flex-shrink: 0;
+        }
+
+        .rundown-table-body {
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            max-height: 100%;
+            scrollbar-width: thin;
+            scrollbar-color: #ac0a0a rgba(20, 13, 15, 0.6);
+        }
+
+        /* Custom Red Scrollbar for Webkit / Mobile Chrome */
+        .rundown-table-body::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .rundown-table-body::-webkit-scrollbar-track {
+            background: rgba(20, 13, 15, 0.6);
+        }
+
+        .rundown-table-body::-webkit-scrollbar-thumb {
+            background: #ac0a0a;
+            border-radius: 6px;
+        }
+
+        .rundown-table-body::-webkit-scrollbar-thumb:hover {
+            background: #d41111;
+        }
+
+        .rundown-row {
+            display: grid;
+            grid-template-columns: 92px 1fr;
+            padding: 10px 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            align-items: center;
+            gap: 12px;
+        }
+
+        .rundown-row:last-child {
+            border-bottom: none;
+        }
+
+        .rundown-time {
+            font-size: 12.5px;
+            font-weight: 700;
+            color: #ffffff;
+            font-variant-numeric: tabular-nums;
+            white-space: nowrap;
+            letter-spacing: -0.2px;
+        }
+
+        .rundown-desc {
+            font-size: 12.5px;
+            font-weight: 500;
+            color: #f5f5f5;
+            line-height: 1.4;
+            word-break: break-word;
+        }
+
+        .rundown-desc-main {
+            display: inline;
+        }
+
+        .rundown-desc-sub {
+            display: inline;
+            font-size: 11px;
+            color: #d1d5db;
+            margin-left: 3px;
+        }
+
+        /* ================= 4. RSVP SECTION ================= */
+        .rsvp-desc-text {
+            font-size: 13px;
+            color: #e5e5e5;
+            text-align: center;
+            line-height: 1.5;
+            margin-bottom: 22px;
+        }
+
         .rsvp-option-group {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 10px;
+            gap: 12px;
             margin-bottom: 14px;
         }
+
         .rsvp-label-card {
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 12px;
-            border-radius: 10px;
-            background: var(--bg-card);
-            border: 1px solid var(--border-subtle);
-            color: var(--text-secondary);
-            font-size: 13px;
+            padding: 14px 10px;
+            border-radius: 12px;
+            background: rgba(20, 13, 15, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #ffffff;
+            font-size: 14px;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.2s;
-            text-align: center;
+            transition: all 0.25s ease;
         }
+
         .rsvp-label-card input {
             display: none;
         }
+
         .rsvp-label-card.active-attending {
-            background: rgba(16, 185, 129, 0.15);
+            background: rgba(16, 185, 129, 0.25);
             border-color: #10b981;
             color: #10b981;
+            box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3);
         }
+
         .rsvp-label-card.active-declined {
-            background: rgba(239, 68, 68, 0.15);
+            background: rgba(239, 68, 68, 0.25);
             border-color: #ef4444;
             color: #ef4444;
+            box-shadow: 0 4px 14px rgba(239, 68, 68, 0.3);
         }
+
         .rsvp-textarea {
             width: 100%;
-            background: var(--bg-card);
-            border: 1px solid var(--border-subtle);
-            border-radius: 10px;
-            padding: 12px;
+            background: rgba(20, 13, 15, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            padding: 12px 14px;
             color: #ffffff;
             font-size: 13px;
             font-family: inherit;
             resize: none;
-            margin-bottom: 14px;
+            margin-bottom: 16px;
             box-sizing: border-box;
         }
+
         .rsvp-textarea:focus {
             outline: none;
             border-color: var(--red-6);
         }
 
-        /* ================= 6. CONTACT SLIDE ================= */
+        .btn-submit-rsvp {
+            width: 100%;
+            background: #ac0a0a;
+            color: #ffffff;
+            font-size: 14px;
+            font-weight: 700;
+            padding: 14px 20px;
+            border-radius: 12px;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 16px rgba(172, 10, 10, 0.4);
+            transition: transform 0.2s ease;
+        }
+
+        .btn-submit-rsvp:active {
+            transform: scale(0.98);
+        }
+
+        /* ================= 5. CONTACT SECTION ================= */
         .contact-item {
             display: flex;
             align-items: center;
             justify-content: space-between;
             padding: 14px 16px;
-            background: var(--bg-card);
+            background: rgba(20, 13, 15, 0.55);
+            backdrop-filter: blur(8px);
             border: 1px solid var(--border-subtle);
             border-radius: 12px;
             margin-bottom: 10px;
         }
+
         .contact-name {
             font-size: 14px;
             font-weight: 700;
             color: #ffffff;
         }
+
         .contact-role {
-            font-size: 11px;
-            color: var(--text-muted);
+            font-size: 12px;
             margin-top: 2px;
         }
+
         .btn-wa {
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            padding: 6px 14px;
+            padding: 7px 14px;
             border-radius: 50px;
             background: #25D366;
             color: #ffffff;
             font-size: 12px;
             font-weight: 700;
             text-decoration: none;
+            box-shadow: 0 3px 10px rgba(37, 211, 102, 0.35);
         }
 
-        /* ================= 7. THANK YOU SLIDE ================= */
-        .thank-you-box {
+        /* ================= 6. GRATITUDE / THANK YOU SECTION ================= */
+        .gratitude-box {
             text-align: center;
-            padding: 32px 20px;
+            padding: 28px 20px;
             border-radius: 18px;
-            background: linear-gradient(180deg, rgba(36, 23, 26, 0.7) 0%, rgba(20, 13, 15, 0.95) 100%);
+            background: rgba(20, 13, 15, 0.55);
+            backdrop-filter: blur(10px);
             border: 1px solid var(--border-red);
         }
+
+        .gratitude-title {
+            font-size: 26px;
+            font-weight: 800;
+            color: #ffffff;
+            margin-bottom: 12px;
+            letter-spacing: -0.5px;
+            font-family: var(--font-sans);
+        }
+
+        .gratitude-desc {
+            font-size: 13px;
+            color: #e5e5e5;
+            line-height: 1.6;
+            margin-bottom: 18px;
+            font-family: var(--font-sans);
+        }
+
+        .gratitude-company {
+            font-size: 13px;
+            font-weight: 700;
+            color: #ffffff;
+            font-family: var(--font-sans);
+        }
+
         .portal-logos-row {
             display: flex;
             align-items: center;
             justify-content: center;
             flex-wrap: wrap;
-            gap: 16px;
+            gap: 14px 18px;
             margin-top: 24px;
-            opacity: 0.75;
-        }
-        .portal-logo-item {
-            height: 18px;
-            object-fit: contain;
+            padding: 10px 4px;
         }
 
-        /* ================= BOTTOM NAVIGATION BAR (User Reference Gambar 1) ================= */
-        .invitation-bottom-nav {
+        .portal-logo-item {
+            height: 20px;
+            max-width: 110px;
+            object-fit: contain;
+            filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.4));
+        }
+
+        /* ================= FLOATING MUTE BUTTON ================= */
+        .btn-audio-mute {
             position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 64px;
-            background-color: var(--navbar-bg);
-            border-top: 1px solid rgba(255, 255, 255, 0.12);
+            bottom: 78px;
+            right: 18px;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: rgba(20, 13, 15, 0.85);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1.5px solid #ac0a0a;
+            color: #ffffff;
             display: flex;
             align-items: center;
-            justify-content: space-around;
-            padding: 0 6px;
-            z-index: 100;
-            box-shadow: 0 -4px 18px rgba(0, 0, 0, 0.45);
+            justify-content: center;
+            cursor: pointer;
+            z-index: 1000;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+            transition: bottom 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.2s ease, background 0.2s ease;
         }
 
-        .nav-tab-btn {
+        .btn-audio-mute.navbar-hidden {
+            bottom: 20px;
+        }
+
+        .btn-audio-mute:active {
+            transform: scale(0.92);
+        }
+
+        .btn-audio-mute svg {
+            width: 19px;
+            height: 19px;
+            fill: none;
+            stroke: #ffffff;
+            stroke-width: 2;
+        }
+
+        /* ================= FLOATING NAVBAR (4 Items in View Window) ================= */
+        .floating-navbar-wrap {
+            position: absolute;
+            bottom: 14px;
+            left: 14px;
+            right: 14px;
+            height: 56px;
+            background: rgba(14, 9, 11, 0.88);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid rgba(172, 10, 10, 0.4);
+            border-radius: 18px;
+            z-index: 999;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transform: translateY(35px);
+            transition: opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1), transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.45s;
+        }
+
+        .floating-navbar-wrap.is-visible {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+            transform: translateY(0);
+        }
+
+        .floating-navbar-track {
+            display: flex;
+            width: 150%;
+            /* 6 items total, each 25% of viewport container -> 4 items visible exactly */
+            height: 100%;
+            transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .nav-item-btn {
+            flex: 0 0 25%;
+            /* exactly 4 items per 100% window */
+            height: 100%;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             gap: 3px;
-            color: #ffffff;
-            opacity: 0.75;
-            padding: 6px 8px;
-            border-radius: 8px;
-            cursor: pointer;
+            color: #d1d5db;
             text-decoration: none;
-            transition: all 0.2s ease;
-            flex: 1;
-            min-width: 0;
+            cursor: pointer;
+            position: relative;
+            transition: color 0.25s ease;
+            user-select: none;
         }
 
-        .nav-tab-btn svg {
-            width: 20px;
-            height: 20px;
+        .nav-item-btn svg {
+            width: 17px;
+            height: 17px;
             stroke-width: 2;
         }
 
-        .nav-tab-label {
-            font-size: 10.5px;
+        .nav-item-label {
+            font-size: 10px;
             font-weight: 600;
             white-space: nowrap;
             letter-spacing: -0.2px;
         }
 
-        /* Active State Pill from user reference (Vibrant Orange rounded block) */
-        .nav-tab-btn.active {
-            opacity: 1;
-            background-color: var(--navbar-active-bg);
+        .nav-item-btn.active {
             color: #ffffff;
-            border-radius: 12px;
-            padding: 8px 6px;
         }
-        .nav-tab-btn.active .nav-tab-label {
+
+        .nav-item-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: 4px;
+            width: 20px;
+            height: 3px;
+            border-radius: 2px;
+            background: #ac0a0a;
+            box-shadow: 0 0 8px #ac0a0a;
+        }
+
+        /* ================= RSVP MODALS ================= */
+        .rsvp-modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 999999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.3s;
+        }
+
+        .rsvp-modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .rsvp-modal-card {
+            background: #141414;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 20px;
+            padding: 28px 24px;
+            width: 100%;
+            max-width: 340px;
+            text-align: center;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8), 0 0 40px rgba(172, 10, 10, 0.2);
+            transform: scale(0.92);
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+        }
+
+        .rsvp-modal-overlay.active .rsvp-modal-card {
+            transform: scale(1);
+        }
+
+        .rsvp-modal-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            margin: 0 auto 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .rsvp-spinner {
+            width: 44px;
+            height: 44px;
+            border: 3px solid rgba(172, 10, 10, 0.25);
+            border-top-color: #ac0a0a;
+            border-radius: 50%;
+            animation: rsvpSpin 0.8s linear infinite;
+            margin: 0 auto 16px;
+        }
+
+        @keyframes rsvpSpin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .rsvp-modal-title {
+            font-size: 17px;
             font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 8px;
+        }
+
+        .rsvp-modal-desc {
+            font-size: 13px;
+            color: #a3a3a3;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .btn-modal-close {
+            background: linear-gradient(135deg, #ac0a0a, #7d0707);
+            color: #ffffff;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 50px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .btn-modal-close:hover {
+            opacity: 0.9;
+        }
+
+        /* Fullscreen Particle Network Canvas Background */
+        .particle-bg-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1; /* Di bawah konten slide (z-index: 2), di atas background section */
         }
     </style>
 </head>
+
 <body>
 
-<div class="page-wrapper">
-    <div class="invitation-frame">
+    <div class="invitation-wrapper">
+        <div class="invitation-container">
 
-        <!-- Vertical Snap Slides -->
-        <div class="slides-viewport" id="slidesViewport">
+            <!-- Fullscreen Particle Network Canvas Background -->
+            <canvas id="particleCanvas" class="particle-bg-canvas"></canvas>
 
-            <!-- 1. COVER / OPENING SLIDE -->
-            <section class="slide-section" id="section-opening" data-index="0" data-label="Opening">
-                <div class="slide-content" style="text-align: center;">
-                    <div class="cover-logos">
-                        <img src="<?= base_url('assets/img/buniverse-white.webp') ?>" alt="B-Universe" class="brand-logo-main">
-                        <div style="width: 1px; height: 18px; background: rgba(255,255,255,0.25);"></div>
-                        <img src="<?= base_url('assets/img/brtst.webp') ?>" alt="BeritaSatu" class="brand-logo-main">
+            <!-- Audio Element (Audio MAP, default 30% volume) -->
+            <audio id="invitationAudio" src="<?= base_url('assets/audio/audio_map.mpeg') ?>" loop
+                preload="auto"></audio>
+
+            <!-- Vertical Snap Viewport: Exactly 6 Sections (Locked on Cover until Buka Undangan) -->
+            <div class="slides-viewport is-locked" id="slidesViewport">
+
+                <!-- 1. COVER SECTION -->
+                <section class="slide-section" id="section-cover" data-index="0" data-label="Cover">
+                    <!-- B-Universe Logo di kiri atas -->
+                    <div class="cover-header-logo" data-aos="fade-down" data-aos-duration="1200">
+                        <img src="<?= base_url('assets/img/buniverse-white.webp') ?>" alt="B-Universe">
                     </div>
 
-                    <div class="tag-pill">Official E-Invitation</div>
+                    <div class="slide-content">
+                        <!-- Elemen cover-hero.webp di tengah -->
+                        <div class="cover-hero-center" data-aos="zoom-in" data-aos-duration="1300">
+                            <img src="<?= base_url('assets/img/cover-hero.webp') ?>" alt="BeritaSatu Malam Apresiasi"
+                                class="cover-hero-img">
+                        </div>
 
-                    <h1 class="slide-title" style="font-size: 26px; margin-bottom: 4px;">
-                        BERITASATU<br>
-                        <span style="color: var(--red-4);">MALAM APRESIASI</span> 2026
-                    </h1>
-                    <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 24px;">
-                        <?= esc($event['theme'] ?? 'Menggerakkan Perubahan, Menginspirasi Negeri') ?>
-                    </p>
+                        <!-- Kepada Yang Terhormat -->
+                        <div class="cover-salutation-text" data-aos="fade-up" data-aos-duration="1200"
+                            data-aos-delay="150">Kepada Yang Terhormat :</div>
 
-                    <div class="cover-hero-box">
-                        <div class="cover-guest-label">Kepada Yth. Tamu Undangan</div>
-                        <div class="cover-guest-name"><?= esc($guest['name'] ?? 'Bapak / Ibu Tamu Undangan') ?></div>
-                        <div class="cover-guest-inst">
-                            <?= esc($guest['institution'] ?: ($guest['position'] ?: 'Tamu Undangan VIP')) ?>
+                        <!-- Container Tamu Merah #AC0A0A opacity 25% + Glass Effect -->
+                        <div class="cover-guest-card" data-aos="fade-up" data-aos-duration="1200" data-aos-delay="250">
+                            <div class="cover-guest-name"><?= esc($guest['name'] ?? 'Tamu Undangan Terhormat') ?></div>
+                            <div class="cover-guest-role">
+                                <?= esc($guest['position'] ?: 'Tamu VIP') ?><?= !empty($guest['institution']) ? ' &bull; ' . esc($guest['institution']) : '' ?>
+                            </div>
+                        </div>
+
+                        <!-- Button Buka Undangan (#AC0A0A opacity 100%) -->
+                        <button type="button" class="btn-open-invitation" data-aos="fade-up" data-aos-duration="1200"
+                            data-aos-delay="350" onclick="handleOpenInvitation()">
+                            Buka Undangan
+                        </button>
+                    </div>
+                </section>
+
+                <!-- 2. DETAIL ACARA SECTION (Waktu & Tempat) -->
+                <section class="slide-section" id="section-detail" data-index="1" data-label="Detail">
+                    <div class="slide-content">
+                        <h2 class="slide-section-title" data-aos="fade-down" data-aos-duration="1200">Waktu & Tempat</h2>
+
+                        <div class="detail-info-list" data-aos="fade-up" data-aos-duration="1200" data-aos-delay="100">
+                            <!-- Tanggal -->
+                            <div class="detail-info-row">
+                                <div class="detail-icon-box">
+                                    <svg viewBox="0 0 24 24" fill="none">
+                                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                        <line x1="16" y1="2" x2="16" y2="6"></line>
+                                        <line x1="8" y1="2" x2="8" y2="6"></line>
+                                        <line x1="3" y1="10" x2="21" y2="10"></line>
+                                    </svg>
+                                </div>
+                                <div class="detail-text-col">
+                                    <div class="detail-info-label">
+                                        <?= !empty($scheduleDay['event_date']) ? date('d F Y', strtotime($scheduleDay['event_date'])) : 'Kamis, 20 November 2026' ?>
+                                    </div>
+                                    <div class="detail-info-sub">Malam Penganugerahan</div>
+                                </div>
+                            </div>
+
+                            <!-- Waktu -->
+                            <div class="detail-info-row">
+                                <div class="detail-icon-box">
+                                    <svg viewBox="0 0 24 24" fill="none">
+                                        <circle cx="12" cy="12" r="10"></circle>
+                                        <polyline points="12 6 12 12 16 14"></polyline>
+                                    </svg>
+                                </div>
+                                <div class="detail-text-col">
+                                    <div class="detail-info-label">18.00 WIB &ndash; Selesai</div>
+                                    <div class="detail-info-sub">Registrasi & Welcoming Dinner</div>
+                                </div>
+                            </div>
+
+                            <!-- Lokasi -->
+                            <div class="detail-info-row">
+                                <div class="detail-icon-box">
+                                    <svg viewBox="0 0 24 24" fill="none">
+                                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                        <circle cx="12" cy="10" r="3"></circle>
+                                    </svg>
+                                </div>
+                                <div class="detail-text-col">
+                                    <div class="detail-info-label">Hotel Mulia Senayan</div>
+                                    <div class="detail-info-sub">Grand Ballroom, Jl. Asia Afrika No.6, Gelora, Jakarta
+                                        Pusat</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Google Maps Iframe -->
+                        <div class="maps-iframe-wrapper" data-aos="zoom-in" data-aos-duration="1200"
+                            data-aos-delay="200">
+                            <iframe
+                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3966.3679507916427!2d106.79448197475055!3d-6.215110593772825!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69f14bba661065%3A0x40c7383d6eb0bab5!2sHotel%20Mulia!5e0!3m2!1sid!2sid!4v1793082515756!5m2!1sid!2sid"
+                                allowfullscreen="" loading="lazy"
+                                referrerpolicy="strict-origin-when-cross-origin"></iframe>
                         </div>
                     </div>
+                </section>
 
-                    <button type="button" class="btn-swipe-down" onclick="scrollToSection('section-acara')">
-                        <span>Buka Detail Undangan</span>
-                        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                    </button>
-                </div>
-            </section>
+                <!-- 3. RUNDOWN SECTION -->
+                <section class="slide-section" id="section-rundown" data-index="2" data-label="Rundown">
+                    <div class="slide-content">
+                        <h2 class="slide-section-title" data-aos="fade-down" data-aos-duration="1200">Rundown</h2>
 
-            <!-- 2. DETAIL ACARA SLIDE -->
-            <section class="slide-section" id="section-acara" data-index="1" data-label="Acara">
-                <div class="slide-content">
-                    <div class="tag-pill">Detail Pelaksanaan</div>
-                    <h2 class="slide-title">Waktu & Tempat</h2>
-                    <p class="slide-desc">Kami mengundang kehadiran Bapak/Ibu pada malam penganugerahan dan apresiasi nasional.</p>
-
-                    <div class="info-card card-red-accent">
-                        <div class="event-detail-item">
-                            <div class="event-icon-box">
-                                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                        <div class="rundown-table-card" data-aos="fade-up" data-aos-duration="1200" data-aos-delay="100">
+                            <div class="rundown-table-header">
+                                <div>Waktu</div>
+                                <div>Acara</div>
                             </div>
+                            <div class="rundown-table-body">
+                                <?php if (!empty($scheduleSessions)): ?>
+                                    <?php foreach ($scheduleSessions as $session): ?>
+                                        <div class="rundown-row">
+                                            <div class="rundown-time">
+                                                <?= date('H:i', strtotime($session['start_time'])) ?> WIB
+                                            </div>
+                                            <div class="rundown-desc">
+                                                <span class="rundown-desc-main"><?= esc($session['title']) ?></span>
+                                                <?php if (!empty($session['subtitle'])): ?>
+                                                    <span class="rundown-desc-sub">(<?= esc($session['subtitle']) ?>)</span>
+                                                <?php endif; ?>
+                                            </div>
+                                        </div>
+                                    <?php endforeach; ?>
+                                <?php else: ?>
+                                    <!-- Fallback Sessions if DB is empty -->
+                                    <div class="rundown-row">
+                                        <div class="rundown-time">18:00 WIB</div>
+                                        <div class="rundown-desc"><span class="rundown-desc-main">Registrasi, Dinner & Band
+                                                Performance</span></div>
+                                    </div>
+                                    <div class="rundown-row">
+                                        <div class="rundown-time">19:00 WIB</div>
+                                        <div class="rundown-desc"><span class="rundown-desc-main">Pembukaan MC & Lagu
+                                                Kebangsaan</span></div>
+                                    </div>
+                                    <div class="rundown-row">
+                                        <div class="rundown-time">19:10 WIB</div>
+                                        <div class="rundown-desc"><span class="rundown-desc-main">Welcoming Speech & VT
+                                                Apresiasi</span></div>
+                                    </div>
+                                    <div class="rundown-row">
+                                        <div class="rundown-time">19:25 WIB</div>
+                                        <div class="rundown-desc"><span class="rundown-desc-main">Keynote Speech &
+                                                Penyerahan Apresiasi</span></div>
+                                    </div>
+                                    <div class="rundown-row">
+                                        <div class="rundown-time">20:10 WIB</div>
+                                        <div class="rundown-desc"><span class="rundown-desc-main">BeritaSatu Malam Apresiasi
+                                                Awarding Session</span></div>
+                                    </div>
+                                    <div class="rundown-row">
+                                        <div class="rundown-time">21:00 WIB</div>
+                                        <div class="rundown-desc"><span class="rundown-desc-main">Closing, Networking &
+                                                Special Performance</span></div>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 4. RSVP SECTION -->
+                <section class="slide-section" id="section-rsvp" data-index="3" data-label="RSVP">
+                    <div class="slide-content">
+                        <h2 class="slide-section-title" data-aos="fade-down" data-aos-duration="1200">RSVP</h2>
+                        <p class="rsvp-desc-text" data-aos="fade-up" data-aos-duration="1200" data-aos-delay="100">Mohon
+                            konfirmasi kesediaan kehadiran Bapak/Ibu untuk reservasi kursi kehormatan.</p>
+
+                        <form id="rsvpForm" data-aos="fade-up" data-aos-duration="1200" data-aos-delay="200"
+                            onsubmit="handleRsvpSubmit(event)">
+                            <input type="hidden" name="invitation_code"
+                                value="<?= esc($guest['invitation_code'] ?? '') ?>">
+
+                            <div class="rsvp-option-group">
+                                <label
+                                    class="rsvp-label-card <?= ($guest['rsvp_status'] ?? '') === 'attending' ? 'active-attending' : '' ?>"
+                                    id="labelAttending">
+                                    <input type="radio" name="rsvp_status" value="attending" <?= ($guest['rsvp_status'] ?? '') === 'attending' ? 'checked' : '' ?> onchange="updateRsvpSelection()">
+                                    <span>Hadir</span>
+                                </label>
+                                <label
+                                    class="rsvp-label-card <?= ($guest['rsvp_status'] ?? '') === 'declined' ? 'active-declined' : '' ?>"
+                                    id="labelDeclined">
+                                    <input type="radio" name="rsvp_status" value="declined" <?= ($guest['rsvp_status'] ?? '') === 'declined' ? 'checked' : '' ?> onchange="updateRsvpSelection()">
+                                    <span>Berhalangan</span>
+                                </label>
+                            </div>
+
+                            <textarea name="notes" class="rsvp-textarea" rows="3"
+                                placeholder="Catatan / ucapan selamat untuk acara (opsional)..."><?= esc($guest['notes'] ?? '') ?></textarea>
+
+                            <button type="submit" id="btnSubmitRsvp" class="btn-submit-rsvp">
+                                <span>Kirim Konfirmasi Kehadiran</span>
+                            </button>
+                        </form>
+                    </div>
+                </section>
+
+                <!-- 5. CONTACT SECTION -->
+                <section class="slide-section" id="section-contact" data-index="4" data-label="Contact">
+                    <div class="slide-content">
+                        <h2 class="slide-section-title" data-aos="fade-down" data-aos-duration="1200">Contact</h2>
+                        <p class="rsvp-desc-text" data-aos="fade-up" data-aos-duration="1200" data-aos-delay="100"
+                            style="margin-bottom:18px;">Apabila Bapak/Ibu memerlukan informasi lebih lanjut mengenai
+                            protokoler dan reservasi.</p>
+
+                        <div class="contact-item" data-aos="fade-up" data-aos-duration="1200" data-aos-delay="150">
                             <div>
-                                <div class="event-detail-label">Hari & Tanggal</div>
-                                <div class="event-detail-val">Kamis, 20 November 2026</div>
+                                <div class="contact-name">Sekretariat B-Universe</div>
+                                <div class="contact-role">Protokoler & Konfirmasi Kehadiran VIP</div>
                             </div>
+                            <a href="https://wa.me/6281212678789?text=Halo%20Panitia%20Malam%20Apresiasi%202026"
+                                target="_blank" class="btn-wa">
+                                WhatsApp
+                            </a>
                         </div>
 
-                        <div class="event-detail-item">
-                            <div class="event-icon-box">
-                                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                            </div>
+                        <div class="contact-item" data-aos="fade-up" data-aos-duration="1200" data-aos-delay="250">
                             <div>
-                                <div class="event-detail-label">Waktu Acara</div>
-                                <div class="event-detail-val">18:00 WIB &ndash; Selesai</div>
+                                <div class="contact-name">Liaison Officer</div>
+                                <div class="contact-role">Pendampingan Tamu & Penjemputan</div>
                             </div>
+                            <a href="https://wa.me/6281212678789?text=Halo%20Protokoler%20Malam%20Apresiasi%202026"
+                                target="_blank" class="btn-wa">
+                                WhatsApp
+                            </a>
                         </div>
+                    </div>
+                </section>
 
-                        <div class="event-detail-item">
-                            <div class="event-icon-box">
-                                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                <!-- 6. GRATITUDE / THANK YOU SECTION -->
+                <section class="slide-section" id="section-gratitude" data-index="5" data-label="Gratitude">
+                    <div class="slide-content">
+                        <div class="gratitude-box" data-aos="zoom-in" data-aos-duration="1300">
+                            <h2 class="gratitude-title">Terima Kasih</h2>
+                            <p class="gratitude-desc">
+                                Merupakan suatu kehormatan dan kebahagiaan bagi kami atas kehadiran serta partisipasi
+                                Bapak/Ibu sekalian dalam BeritaSatu Malam Apresiasi 2026.
+                            </p>
+                            <div class="gratitude-company">
+                                BeritaSatu Media Holdings &bull; B-Universe
                             </div>
-                            <div>
-                                <div class="event-detail-label">Lokasi Acara</div>
-                                <div class="event-detail-val">Ballroom 1, Hotel Mulia Senayan</div>
-                                <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">Jl. Asia Afrika, Gelora, Jakarta Pusat</div>
-                            </div>
-                        </div>
 
-                        <div class="event-detail-item">
-                            <div class="event-icon-box">
-                                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-                            </div>
-                            <div>
-                                <div class="event-detail-label">Dresscode</div>
-                                <div class="event-detail-val">Batik Lengan Panjang / Formal Suite</div>
+                            <!-- All 7 Media Partner & Brand Logos matching Footer -->
+                            <div class="portal-logos-row" data-aos="fade-up" data-aos-duration="1200"
+                                data-aos-delay="200">
+                                <img src="<?= base_url('assets/img/btv.webp') ?>" alt="BTV" class="portal-logo-item">
+                                <img src="<?= base_url('assets/img/brtst.webp') ?>" alt="BeritaSatu"
+                                    class="portal-logo-item">
+                                <img src="<?= base_url('assets/img/brtstdc.webp') ?>" alt="BeritaSatu.com"
+                                    class="portal-logo-item">
+                                <img src="<?= base_url('assets/img/id.webp') ?>" alt="Investor Daily Indonesia"
+                                    class="portal-logo-item">
+                                <img src="<?= base_url('assets/img/investor.webp') ?>" alt="Investor.id"
+                                    class="portal-logo-item">
+                                <img src="<?= base_url('assets/img/jg.webp') ?>" alt="Jakarta Globe"
+                                    class="portal-logo-item">
+                                <img src="<?= base_url('assets/img/datasatu.webp') ?>" alt="DataSatu.com"
+                                    class="portal-logo-item">
                             </div>
                         </div>
                     </div>
-                </div>
-            </section>
+                </section>
 
-            <!-- 3. RUNDOWN SLIDE -->
-            <section class="slide-section" id="section-rundown" data-index="2" data-label="Rundown">
-                <div class="slide-content">
-                    <div class="tag-pill">Susunan Acara</div>
-                    <h2 class="slide-title">Rundown Kegiatan</h2>
-                    <p class="slide-desc">Agenda perayaan dan penganugerahan BeritaSatu Malam Apresiasi 2026.</p>
+            </div>
 
-                    <div class="rundown-timeline">
-                        <div class="rundown-item">
-                            <div class="rundown-time">17.30 - 18.30</div>
-                            <div class="rundown-title">Registrasi Tamu VIP, Red Carpet & Welcoming Cocktail</div>
-                        </div>
-                        <div class="rundown-item">
-                            <div class="rundown-time">18.30 - 18.45</div>
-                            <div class="rundown-title">Opening Act: Tarian Tradisional Kontemporer & Lagu Indonesia Raya</div>
-                        </div>
-                        <div class="rundown-item">
-                            <div class="rundown-time">18.45 - 19.00</div>
-                            <div class="rundown-title">Welcoming Speech oleh Management B-Universe</div>
-                        </div>
-                        <div class="rundown-item">
-                            <div class="rundown-time">19.00 - 19.45</div>
-                            <div class="rundown-title">Sesi Penganugerahan Kategori Governance & Sektor Publik</div>
-                        </div>
-                        <div class="rundown-item">
-                            <div class="rundown-time">19.45 - 20.30</div>
-                            <div class="rundown-title">Sesi Penganugerahan Kategori Private Sectors & Korporasi</div>
-                        </div>
-                        <div class="rundown-item">
-                            <div class="rundown-time">20.30 - 21.30</div>
-                            <div class="rundown-title">Gala Dinner, Special Musical Performance & Sesi Foto Bersama</div>
-                        </div>
-                    </div>
-                </div>
-            </section>
+            <!-- Mute / Unmute Button (Top Right of Floating Navbar) -->
+            <button type="button" class="btn-audio-mute navbar-hidden" id="btnAudioMute" title="Mute/Unmute Audio"
+                onclick="toggleAudioMute()">
+                <!-- Speaker Icon -->
+                <svg id="iconAudioPlaying" viewBox="0 0 24 24" style="display:none;">
+                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                    <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                </svg>
+                <!-- Muted Icon (Default) -->
+                <svg id="iconAudioMuted" viewBox="0 0 24 24">
+                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                    <line x1="23" y1="9" x2="17" y2="15"></line>
+                    <line x1="17" y1="9" x2="23" y2="15"></line>
+                </svg>
+            </button>
 
-            <!-- 4. MAPS SLIDE -->
-            <section class="slide-section" id="section-maps" data-index="3" data-label="Maps">
-                <div class="slide-content">
-                    <div class="tag-pill">Petunjuk Lokasi</div>
-                    <h2 class="slide-title">Peta Lokasi Gedung</h2>
-                    <p class="slide-desc">Hotel Mulia Senayan, Ballroom 1, Jakarta Pusat.</p>
-
-                    <div class="maps-box">
-                        <iframe 
-                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3966.3888517539423!2d106.79727567499026!3d-6.212340393775647!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69f14d8721c439%3A0xe5c3513eb1796c82!2sHotel%20Mulia%20Senayan%2C%20Jakarta!5e0!3m2!1sid!2sid!4v1700000000000!5m2!1sid!2sid" 
-                            allowfullscreen="" 
-                            loading="lazy" 
-                            referrerpolicy="no-referrer-when-downgrade">
-                        </iframe>
-                    </div>
-
-                    <a href="https://maps.google.com/?q=Hotel+Mulia+Senayan+Jakarta" target="_blank" rel="noopener noreferrer" class="btn-maps-action">
-                        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
-                        <span>Buka Penunjuk Arah Google Maps</span>
+            <!-- Floating Navbar with 4-Item Window Track -->
+            <div class="floating-navbar-wrap">
+                <div class="floating-navbar-track" id="navbarTrack">
+                    <a href="javascript:void(0)" class="nav-item-btn active" data-index="0" data-target="section-cover"
+                        onclick="scrollToSectionByIndex(0)">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                        </svg>
+                        <span class="nav-item-label">Cover</span>
+                    </a>
+                    <a href="javascript:void(0)" class="nav-item-btn" data-index="1" data-target="section-detail"
+                        onclick="scrollToSectionByIndex(1)">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <polyline points="12 6 12 12 16 14"></polyline>
+                        </svg>
+                        <span class="nav-item-label">Detail</span>
+                    </a>
+                    <a href="javascript:void(0)" class="nav-item-btn" data-index="2" data-target="section-rundown"
+                        onclick="scrollToSectionByIndex(2)">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <rect x="3" y="3" width="18" height="18" rx="2"></rect>
+                            <line x1="7" y1="8" x2="17" y2="8"></line>
+                            <line x1="7" y1="12" x2="17" y2="12"></line>
+                            <line x1="7" y1="16" x2="13" y2="16"></line>
+                        </svg>
+                        <span class="nav-item-label">Rundown</span>
+                    </a>
+                    <a href="javascript:void(0)" class="nav-item-btn" data-index="3" data-target="section-rsvp"
+                        onclick="scrollToSectionByIndex(3)">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"></path>
+                        </svg>
+                        <span class="nav-item-label">RSVP</span>
+                    </a>
+                    <a href="javascript:void(0)" class="nav-item-btn" data-index="4" data-target="section-contact"
+                        onclick="scrollToSectionByIndex(4)">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path
+                                d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z">
+                            </path>
+                        </svg>
+                        <span class="nav-item-label">Contact</span>
+                    </a>
+                    <a href="javascript:void(0)" class="nav-item-btn" data-index="5" data-target="section-gratitude"
+                        onclick="scrollToSectionByIndex(5)">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path
+                                d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
+                            </path>
+                        </svg>
+                        <span class="nav-item-label">Gratitude</span>
                     </a>
                 </div>
-            </section>
+            </div>
 
-            <!-- 5. RSVP SLIDE -->
-            <section class="slide-section" id="section-rsvp" data-index="4" data-label="RSVP">
-                <div class="slide-content">
-                    <div class="tag-pill">Konfirmasi Kehadiran</div>
-                    <h2 class="slide-title">RSVP Tamu Undangan</h2>
-                    <p class="slide-desc">Mohon konfirmasi kesediaan kehadiran Bapak/Ibu untuk reservasi kursi kehormatan.</p>
-
-                    <form id="rsvpForm" onsubmit="handleRsvpSubmit(event)">
-                        <input type="hidden" name="invitation_code" value="<?= esc($guest['invitation_code'] ?? '') ?>">
-
-                        <div class="rsvp-option-group">
-                            <label class="rsvp-label-card <?= ($guest['rsvp_status'] ?? '') === 'attending' ? 'active-attending' : '' ?>" id="labelAttending">
-                                <input type="radio" name="rsvp_status" value="attending" <?= ($guest['rsvp_status'] ?? '') === 'attending' ? 'checked' : '' ?> onchange="updateRsvpSelection()">
-                                <span>Hadir</span>
-                            </label>
-                            <label class="rsvp-label-card <?= ($guest['rsvp_status'] ?? '') === 'declined' ? 'active-declined' : '' ?>" id="labelDeclined">
-                                <input type="radio" name="rsvp_status" value="declined" <?= ($guest['rsvp_status'] ?? '') === 'declined' ? 'checked' : '' ?> onchange="updateRsvpSelection()">
-                                <span>Berhalangan</span>
-                            </label>
-                        </div>
-
-                        <textarea 
-                            name="notes" 
-                            class="rsvp-textarea" 
-                            rows="3" 
-                            placeholder="Catatan / ucapan selamat untuk acara (opsional)..."><?= esc($guest['notes'] ?? '') ?></textarea>
-
-                        <button type="submit" id="btnSubmitRsvp" class="btn-swipe-down" style="padding: 12px 20px;">
-                            <span>Kirim Konfirmasi Kehadiran</span>
-                        </button>
-                    </form>
-
-                    <div id="rsvpAlert" style="display:none; font-size:12px; padding:10px 14px; border-radius:8px; margin-top:14px; text-align:center;"></div>
-                </div>
-            </section>
-
-            <!-- 6. CONTACT PERSON SLIDE -->
-            <section class="slide-section" id="section-contact" data-index="5" data-label="Contact">
-                <div class="slide-content">
-                    <div class="tag-pill">Layanan Informasi</div>
-                    <h2 class="slide-title">Hubungi Panitia</h2>
-                    <p class="slide-desc">Apabila Bapak/Ibu memerlukan informasi lebih lanjut mengenai protokoler dan reservasi.</p>
-
-                    <div class="contact-item">
-                        <div>
-                            <div class="contact-name">Sekretariat Panitia</div>
-                            <div class="contact-role">Protokoler & Konfirmasi Kehadiran VIP</div>
-                        </div>
-                        <a href="https://wa.me/6281212678789?text=Halo%20Panitia%20Malam%20Apresiasi%202026" target="_blank" rel="noopener noreferrer" class="btn-wa">
-                            <span>WhatsApp</span>
-                        </a>
-                    </div>
-
-                    <div class="contact-item">
-                        <div>
-                            <div class="contact-name">Liaison Officer (LO)</div>
-                            <div class="contact-role">Pendampingan Tamu & Penjemputan</div>
-                        </div>
-                        <a href="https://wa.me/628118000000?text=Halo%20LO%20Malam%20Apresiasi%202026" target="_blank" rel="noopener noreferrer" class="btn-wa">
-                            <span>WhatsApp</span>
-                        </a>
+            <!-- RSVP Loading Modal (Menyimpan...) -->
+            <div class="rsvp-modal-overlay" id="rsvpLoadingModal">
+                <div class="rsvp-modal-card">
+                    <div class="rsvp-spinner"></div>
+                    <div class="rsvp-modal-title">Menyimpan Konfirmasi...</div>
+                    <div class="rsvp-modal-desc">Mohon tunggu sebentar, sistem sedang mencatat reservasi kehadiran Anda.
                     </div>
                 </div>
-            </section>
+            </div>
 
-            <!-- 7. THANK YOU SLIDE -->
-            <section class="slide-section" id="section-thanks" data-index="6" data-label="Thank You">
-                <div class="slide-content">
-                    <div class="thank-you-box">
-                        <div class="tag-pill" style="margin-bottom: 12px;">Sampai Jumpa</div>
-                        <h2 class="slide-title slide-title-serif" style="font-size: 28px; margin-bottom: 8px;">Terima Kasih</h2>
-                        <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 16px;">
-                            Merupakan suatu kehormatan dan kebahagiaan bagi kami atas kehadiran serta partisipasi Bapak/Ibu sekalian.
-                        </p>
-                        <div style="font-size: 12px; font-weight: 700; color: var(--red-4);">
-                            BeritaSatu Media Holdings &bull; B-Universe
-                        </div>
-
-                        <div class="portal-logos-row">
-                            <img src="<?= base_url('assets/img/brtstdc.webp') ?>" alt="Beritasatu.com" class="portal-logo-item">
-                            <img src="<?= base_url('assets/img/btv.webp') ?>" alt="BTV" class="portal-logo-item">
-                            <img src="<?= base_url('assets/img/investor.webp') ?>" alt="Investor Daily" class="portal-logo-item">
-                            <img src="<?= base_url('assets/img/jg.webp') ?>" alt="Jakarta Globe" class="portal-logo-item">
-                        </div>
-                    </div>
+            <!-- RSVP Result Modal (Berhasil / Gagal) -->
+            <div class="rsvp-modal-overlay" id="rsvpResultModal">
+                <div class="rsvp-modal-card">
+                    <div class="rsvp-modal-icon" id="rsvpResultIcon"></div>
+                    <div class="rsvp-modal-title" id="rsvpResultTitle">Konfirmasi Berhasil</div>
+                    <div class="rsvp-modal-desc" id="rsvpResultMessage"></div>
+                    <button type="button" class="btn-modal-close" onclick="closeRsvpResultModal()">Tutup</button>
                 </div>
-            </section>
+            </div>
 
         </div>
-
-        <!-- Sticky Bottom Navigation Bar (Matching User Reference Gambar 1) -->
-        <nav class="invitation-bottom-nav" id="bottomNav">
-            <a href="javascript:void(0)" class="nav-tab-btn active" data-target="section-opening" onclick="scrollToSection('section-opening')">
-                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
-                <span class="nav-tab-label">Opening</span>
-            </a>
-            <a href="javascript:void(0)" class="nav-tab-btn" data-target="section-acara" onclick="scrollToSection('section-acara')">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line><polyline points="9 16 11 18 15 14"></polyline></svg>
-                <span class="nav-tab-label">Acara</span>
-            </a>
-            <a href="javascript:void(0)" class="nav-tab-btn" data-target="section-rundown" onclick="scrollToSection('section-rundown')">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="7" y1="8" x2="17" y2="8"></line><line x1="7" y1="12" x2="17" y2="12"></line><line x1="7" y1="16" x2="13" y2="16"></line></svg>
-                <span class="nav-tab-label">Rundown</span>
-            </a>
-            <a href="javascript:void(0)" class="nav-tab-btn" data-target="section-maps" onclick="scrollToSection('section-maps')">
-                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
-                <span class="nav-tab-label">Maps</span>
-            </a>
-            <a href="javascript:void(0)" class="nav-tab-btn" data-target="section-rsvp" onclick="scrollToSection('section-rsvp')">
-                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"/></svg>
-                <span class="nav-tab-label">RSVP</span>
-            </a>
-        </nav>
-
     </div>
-</div>
 
-<script>
-// Section scroll helper
-function scrollToSection(sectionId) {
-    const el = document.getElementById(sectionId);
-    if (el) {
-        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-}
+    <!-- AOS (Animate On Scroll) JS Library -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
-// Active navbar sync via IntersectionObserver
-const viewport = document.getElementById('slidesViewport');
-const sections = document.querySelectorAll('.slide-section');
-const navButtons = document.querySelectorAll('.nav-tab-btn');
+    <script>
+        // Init AOS with duration 1200 as requested
+        AOS.init({
+            duration: 1200,
+            once: true,
+            easing: 'ease-out-cubic',
+            offset: 20
+        });
 
-const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            const currentId = entry.target.id;
-            navButtons.forEach(btn => {
-                if (btn.getAttribute('data-target') === currentId) {
+        // Audio Setup: Default 30% volume
+        const audio = document.getElementById('invitationAudio');
+        const iconPlaying = document.getElementById('iconAudioPlaying');
+        const iconMuted = document.getElementById('iconAudioMuted');
+        let isAudioPlaying = false;
+
+        if (audio) {
+            audio.volume = 0.3; // Default 30% volume
+        }
+
+        function playAudio() {
+            if (!audio) return;
+            audio.play().then(() => {
+                isAudioPlaying = true;
+                if (iconPlaying) iconPlaying.style.display = 'block';
+                if (iconMuted) iconMuted.style.display = 'none';
+            }).catch(() => {
+                // Autoplay policy: will trigger on click
+            });
+        }
+
+        function pauseAudio() {
+            if (!audio) return;
+            audio.pause();
+            isAudioPlaying = false;
+            if (iconPlaying) iconPlaying.style.display = 'none';
+            if (iconMuted) iconMuted.style.display = 'block';
+        }
+
+        function toggleAudioMute() {
+            if (isAudioPlaying) {
+                pauseAudio();
+            } else {
+                playAudio();
+            }
+        }
+
+        let isInvitationOpened = false;
+
+        const viewport = document.getElementById('slidesViewport');
+        const sections = Array.from(document.querySelectorAll('.slide-section'));
+        const navItems = Array.from(document.querySelectorAll('.nav-item-btn'));
+        const navbarTrack = document.getElementById('navbarTrack');
+
+        // Smoothly scroll to section within viewport
+        function scrollToSectionByIndex(index) {
+            const sec = sections[index];
+            if (!sec || !viewport) return;
+
+            sec.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
+
+        // Buka Undangan Action: Unlock Scroll + Fullscreen + Reveal Navbar + Scroll to Section Detail + Auto-Play Audio
+        function handleOpenInvitation() {
+            isInvitationOpened = true;
+            playAudio();
+
+            // Unlock viewport scrolling
+            if (viewport) {
+                viewport.classList.remove('is-locked');
+            }
+
+            // Reveal Floating Navbar & position mute button
+            const navbarWrap = document.querySelector('.floating-navbar-wrap');
+            if (navbarWrap) {
+                navbarWrap.classList.add('is-visible');
+            }
+            const btnMute = document.getElementById('btnAudioMute');
+            if (btnMute) {
+                btnMute.classList.remove('navbar-hidden');
+            }
+
+            // Function to perform exact align scroll to Detail section
+            const triggerScrollToDetail = () => {
+                requestAnimationFrame(() => {
+                    scrollToSectionByIndex(1);
+                });
+            };
+
+            // Request Fullscreen if supported
+            const docEl = document.documentElement;
+            if (docEl.requestFullscreen) {
+                docEl.requestFullscreen().then(() => {
+                    setTimeout(triggerScrollToDetail, 120);
+                }).catch(() => {
+                    triggerScrollToDetail();
+                });
+            } else if (docEl.webkitRequestFullscreen) {
+                docEl.webkitRequestFullscreen();
+                setTimeout(triggerScrollToDetail, 120);
+            } else if (docEl.msRequestFullscreen) {
+                docEl.msRequestFullscreen();
+                setTimeout(triggerScrollToDetail, 120);
+            } else {
+                triggerScrollToDetail();
+            }
+        }
+
+        // Prevent wheel / touch swipe while on cover before invitation is opened
+        if (viewport) {
+            const preventScrollOnCover = (e) => {
+                if (!isInvitationOpened) {
+                    e.preventDefault();
+                }
+            };
+            viewport.addEventListener('wheel', preventScrollOnCover, { passive: false });
+            viewport.addEventListener('touchmove', preventScrollOnCover, { passive: false });
+        }
+
+        /*
+         * Sliding Window Navbar (4 Items Visible in Track)
+         * Logic Mapping:
+         * Index 0 (Cover)     -> items visible: 0, 1, 2, 3 (Cover active)    -> window offset 0
+         * Index 1 (Detail)    -> items visible: 0, 1, 2, 3 (Detail active)   -> window offset 0
+         * Index 2 (Rundown)   -> items visible: 0, 1, 2, 3 (Rundown active)  -> window offset 0
+         * Index 3 (RSVP)      -> items visible: 1, 2, 3, 4 (RSVP active)     -> window offset 1 (shifts -25%)
+         * Index 4 (Contact)   -> items visible: 2, 3, 4, 5 (Contact active)  -> window offset 2 (shifts -50%)
+         * Index 5 (Gratitude) -> items visible: 2, 3, 4, 5 (Gratitude active)-> window offset 2 (shifts -50%)
+         */
+        function updateNavbarWindow(activeIndex) {
+            const navbarWrap = document.querySelector('.floating-navbar-wrap');
+            const btnMute = document.getElementById('btnAudioMute');
+            
+            // Show navbar if user scrolled past cover (or if already opened)
+            if (navbarWrap) {
+                if (activeIndex > 0 || isInvitationOpened) {
+                    navbarWrap.classList.add('is-visible');
+                    if (btnMute) btnMute.classList.remove('navbar-hidden');
+                } else {
+                    navbarWrap.classList.remove('is-visible');
+                    if (btnMute) btnMute.classList.add('navbar-hidden');
+                }
+            }
+
+            let shiftPercent = 0;
+            if (activeIndex <= 2) {
+                shiftPercent = 0;
+            } else if (activeIndex === 3) {
+                shiftPercent = -25;
+            } else {
+                shiftPercent = -50;
+            }
+
+            if (navbarTrack) {
+                navbarTrack.style.transform = `translateX(${shiftPercent}%)`;
+            }
+
+            navItems.forEach((btn, idx) => {
+                if (idx === activeIndex) {
                     btn.classList.add('active');
                 } else {
                     btn.classList.remove('active');
                 }
             });
         }
-    });
-}, {
-    root: viewport,
-    threshold: 0.55
-});
 
-sections.forEach(sec => observer.observe(sec));
+        // Active section observer & Per-section AOS trigger
+        const animatedSections = new Set();
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const index = parseInt(entry.target.getAttribute('data-index') || '0', 10);
+                    updateNavbarWindow(index);
 
-// Smooth touch swipe & mouse drag helper
-let startY = 0;
-let isScrolling = false;
+                    // Animate items inside section on first entrance
+                    if (!animatedSections.has(index)) {
+                        animatedSections.add(index);
+                        const aosItems = entry.target.querySelectorAll('[data-aos]');
+                        aosItems.forEach(el => {
+                            el.classList.add('aos-animate');
+                        });
+                    }
+                }
+            });
+        }, {
+            root: viewport,
+            threshold: 0.35
+        });
 
-viewport.addEventListener('touchstart', (e) => {
-    startY = e.touches[0].clientY;
-}, { passive: true });
+        sections.forEach(sec => observer.observe(sec));
 
-viewport.addEventListener('touchend', (e) => {
-    if (isScrolling) return;
-    const diff = startY - e.changedTouches[0].clientY;
-    // Gesture threshold of 40px
-    if (Math.abs(diff) > 40) {
-        isScrolling = true;
-        const currentScroll = viewport.scrollTop;
-        const h = viewport.clientHeight;
-        const target = diff > 0 ? currentScroll + h : currentScroll - h;
-        viewport.scrollTo({ top: target, behavior: 'smooth' });
-        setTimeout(() => { isScrolling = false; }, 400);
-    }
-}, { passive: true });
+        // RSVP Radio Selection
+        function updateRsvpSelection() {
+            const attendingRadio = document.querySelector('input[name="rsvp_status"][value="attending"]');
+            const declinedRadio = document.querySelector('input[name="rsvp_status"][value="declined"]');
+            const labelAtt = document.getElementById('labelAttending');
+            const labelDec = document.getElementById('labelDeclined');
 
-// RSVP Selection Highlighting
-function updateRsvpSelection() {
-    const attendingRadio = document.querySelector('input[name="rsvp_status"][value="attending"]');
-    const declinedRadio = document.querySelector('input[name="rsvp_status"][value="declined"]');
-    const labelAtt = document.getElementById('labelAttending');
-    const labelDec = document.getElementById('labelDeclined');
-
-    if (attendingRadio && attendingRadio.checked) {
-        labelAtt.classList.add('active-attending');
-        labelDec.classList.remove('active-declined');
-    } else if (declinedRadio && declinedRadio.checked) {
-        labelDec.classList.add('active-declined');
-        labelAtt.classList.remove('active-attending');
-    }
-}
-
-// AJAX RSVP Submit
-function handleRsvpSubmit(e) {
-    e.preventDefault();
-    const form = e.target;
-    const btn = document.getElementById('btnSubmitRsvp');
-    const alertBox = document.getElementById('rsvpAlert');
-    const formData = new FormData(form);
-
-    btn.disabled = true;
-    btn.textContent = 'Menyimpan...';
-
-    fetch('<?= base_url('invitation/rsvp') ?>', {
-        method: 'POST',
-        body: formData,
-        headers: {
-            'X-Requested-With': 'XMLHttpRequest'
+            if (attendingRadio && attendingRadio.checked) {
+                labelAtt.classList.add('active-attending');
+                labelDec.classList.remove('active-declined');
+            } else if (declinedRadio && declinedRadio.checked) {
+                labelDec.classList.add('active-declined');
+                labelAtt.classList.remove('active-attending');
+            }
         }
-    })
-    .then(r => r.json())
-    .then(res => {
-        btn.disabled = false;
-        btn.textContent = 'Kirim Konfirmasi Kehadiran';
-        alertBox.style.display = 'block';
-        if (res.status === 'success') {
-            alertBox.style.background = 'rgba(16, 185, 129, 0.2)';
-            alertBox.style.color = '#10b981';
-            alertBox.style.border = '1px solid rgba(16, 185, 129, 0.4)';
-            alertBox.textContent = res.message;
-        } else {
-            alertBox.style.background = 'rgba(239, 68, 68, 0.2)';
-            alertBox.style.color = '#ef4444';
-            alertBox.style.border = '1px solid rgba(239, 68, 68, 0.4)';
-            alertBox.textContent = res.message;
+
+        // RSVP Ajax Handler & Custom Modals
+        let rsvpModalTimer = null;
+
+        function showRsvpLoadingModal() {
+            const m = document.getElementById('rsvpLoadingModal');
+            if (m) m.classList.add('active');
         }
-    })
-    .catch(err => {
-        btn.disabled = false;
-        btn.textContent = 'Kirim Konfirmasi Kehadiran';
-        alertBox.style.display = 'block';
-        alertBox.style.background = 'rgba(239, 68, 68, 0.2)';
-        alertBox.style.color = '#ef4444';
-        alertBox.style.border = '1px solid rgba(239, 68, 68, 0.4)';
-        alertBox.textContent = 'Terjadi kesalahan jaringan, silakan coba lagi.';
-    });
-}
-</script>
+
+        function hideRsvpLoadingModal() {
+            const m = document.getElementById('rsvpLoadingModal');
+            if (m) m.classList.remove('active');
+        }
+
+        function showRsvpResultModal(title, message, isSuccess) {
+            const modal = document.getElementById('rsvpResultModal');
+            const titleEl = document.getElementById('rsvpResultTitle');
+            const descEl = document.getElementById('rsvpResultMessage');
+            const iconEl = document.getElementById('rsvpResultIcon');
+
+            if (!modal) return;
+
+            titleEl.textContent = title;
+            descEl.textContent = message;
+
+            if (isSuccess) {
+                iconEl.style.background = 'rgba(16, 185, 129, 0.15)';
+                iconEl.style.color = '#10b981';
+                iconEl.innerHTML = '<svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+            } else {
+                iconEl.style.background = 'rgba(239, 68, 68, 0.15)';
+                iconEl.style.color = '#ef4444';
+                iconEl.innerHTML = '<svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>';
+            }
+
+            modal.classList.add('active');
+
+            if (rsvpModalTimer) clearTimeout(rsvpModalTimer);
+            rsvpModalTimer = setTimeout(() => {
+                closeRsvpResultModal();
+            }, 4500);
+        }
+
+        function closeRsvpResultModal() {
+            const modal = document.getElementById('rsvpResultModal');
+            if (modal) modal.classList.remove('active');
+            if (rsvpModalTimer) clearTimeout(rsvpModalTimer);
+        }
+
+        function handleRsvpSubmit(e) {
+            e.preventDefault();
+            const form = e.target;
+            const btn = document.getElementById('btnSubmitRsvp');
+            const formData = new FormData(form);
+
+            btn.disabled = true;
+            showRsvpLoadingModal();
+
+            fetch('<?= base_url('invitation/rsvp') ?>', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+                .then(r => r.json())
+                .then(res => {
+                    btn.disabled = false;
+                    hideRsvpLoadingModal();
+
+                    if (res.status === 'success') {
+                        showRsvpResultModal('Konfirmasi Berhasil', res.message, true);
+                    } else {
+                        showRsvpResultModal('Gagal Menyimpan', res.message, false);
+                    }
+                })
+                .catch(err => {
+                    btn.disabled = false;
+                    hideRsvpLoadingModal();
+                    showRsvpResultModal('Terjadi Kesalahan', 'Gagal menghubungi server, silakan periksa koneksi internet Anda.', false);
+                });
+        }
+
+        // ================= PARTICLE NETWORK ENGINE (Full Screen JulianLaval Style) =================
+        /*
+         * Aturan Warna Partikel (1 Layar Penuh):
+         * 1. Awalnya warna partikel di seluruh layar SAMA, yaitu MERAH (#ac0a0a).
+         * 2. Partikel tetap merah selama berada di Cover, Detail, Rundown, hingga RSVP.
+         * 3. Warna partikel baru mulai bertransisi perlahan ke warna HITAM (#141414) saat user memasuki Section Contact.
+         * 4. Ketika mentok di bawah (Section Gratitude dengan background merah solid), warna partikel menjadi HITAM penuh.
+         */
+        class FullscreenParticleNetwork {
+            constructor(canvasId, particleCount, connectionDist) {
+                this.canvas = document.getElementById(canvasId);
+                if (!this.canvas) return;
+                this.ctx = this.canvas.getContext('2d');
+                this.particleCount = particleCount || 55;
+                this.connectionDist = connectionDist || 95;
+                this.particles = [];
+                this.animationFrameId = null;
+
+                this.init();
+            }
+
+            init() {
+                this.resize();
+                window.addEventListener('resize', () => {
+                    this.resize();
+                });
+
+                this.particles = [];
+                for (let i = 0; i < this.particleCount; i++) {
+                    this.particles.push({
+                        x: Math.random() * this.canvas.width,
+                        y: Math.random() * this.canvas.height,
+                        vx: (Math.random() - 0.5) * 0.65,
+                        vy: (Math.random() - 0.5) * 0.65,
+                        radius: Math.random() * 1.5 + 1.2
+                    });
+                }
+
+                this.animate();
+            }
+
+            resize() {
+                const container = document.querySelector('.invitation-container');
+                const rect = container ? container.getBoundingClientRect() : this.canvas.getBoundingClientRect();
+                this.canvas.width = rect.width || window.innerWidth;
+                this.canvas.height = rect.height || window.innerHeight;
+            }
+
+            // Hitung warna partikel & garis saat ini berdasarkan posisi scroll viewport
+            getCurrentNetworkColor(alpha) {
+                let ratio = 0;
+                if (viewport) {
+                    const currentScroll = viewport.scrollTop;
+                    const contactSection = document.getElementById('section-contact');
+                    const gratitudeSection = document.getElementById('section-gratitude');
+
+                    if (contactSection && gratitudeSection) {
+                        const contactTop = contactSection.offsetTop;
+                        const gratitudeTop = gratitudeSection.offsetTop;
+                        const maxScroll = Math.max(gratitudeTop, contactTop + 1);
+
+                        if (currentScroll > contactTop) {
+                            ratio = Math.max(0, Math.min(1, (currentScroll - contactTop) / (maxScroll - contactTop)));
+                        } else {
+                            ratio = 0;
+                        }
+                    } else {
+                        const maxScroll = (viewport.scrollHeight - viewport.clientHeight) || 1;
+                        const scrollRatio = currentScroll / maxScroll;
+                        if (scrollRatio > 0.65) {
+                            ratio = Math.min(1, (scrollRatio - 0.65) / 0.35);
+                        }
+                    }
+                }
+
+                // Interpolate: Red (172, 10, 10) to Black (20, 20, 20)
+                const r = Math.round(172 + (20 - 172) * ratio);
+                const g = Math.round(10 + (20 - 10) * ratio);
+                const b = Math.round(10 + (20 - 10) * ratio);
+                return `rgba(${r}, ${g}, ${b}, ${alpha.toFixed(2)})`;
+            }
+
+            animate() {
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+                const pColor = this.getCurrentNetworkColor(0.85);
+
+                // Update & draw particles
+                for (let i = 0; i < this.particles.length; i++) {
+                    const p = this.particles[i];
+                    p.x += p.vx;
+                    p.y += p.vy;
+
+                    if (p.x < 0 || p.x > this.canvas.width) p.vx *= -1;
+                    if (p.y < 0 || p.y > this.canvas.height) p.vy *= -1;
+
+                    this.ctx.beginPath();
+                    this.ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                    this.ctx.fillStyle = pColor;
+                    this.ctx.fill();
+
+                    // Connect neighboring particles with line
+                    for (let j = i + 1; j < this.particles.length; j++) {
+                        const p2 = this.particles[j];
+                        const dx = p.x - p2.x;
+                        const dy = p.y - p2.y;
+                        const dist = Math.sqrt(dx * dx + dy * dy);
+
+                        if (dist < this.connectionDist) {
+                            const lineAlpha = (1 - dist / this.connectionDist) * 0.45;
+                            const lineColor = this.getCurrentNetworkColor(lineAlpha);
+
+                            this.ctx.beginPath();
+                            this.ctx.moveTo(p.x, p.y);
+                            this.ctx.lineTo(p2.x, p2.y);
+                            this.ctx.strokeStyle = lineColor;
+                            this.ctx.lineWidth = 0.85;
+                            this.ctx.stroke();
+                        }
+                    }
+                }
+
+                this.animationFrameId = requestAnimationFrame(() => this.animate());
+            }
+        }
+
+        // Initialize particle network on fullscreen canvas
+        window.addEventListener('DOMContentLoaded', () => {
+            new FullscreenParticleNetwork('particleCanvas', 52, 95);
+        });
+    </script>
 
 </body>
+
 </html>

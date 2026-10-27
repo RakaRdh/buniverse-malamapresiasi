@@ -61,6 +61,22 @@ class InvitationController extends BaseController
             }
         }
 
+        // 6. Fetch schedule sessions for Rundown section
+        $scheduleSessions = [];
+        $scheduleDay = $db->table('schedule_days')
+            ->where('event_id', $guest['event_id'])
+            ->orderBy('day_number', 'ASC')
+            ->get()
+            ->getRowArray();
+
+        if ($scheduleDay) {
+            $scheduleSessions = $db->table('schedule_sessions')
+                ->where('schedule_day_id', $scheduleDay['id'])
+                ->orderBy('sort_order', 'ASC')
+                ->get()
+                ->getResultArray();
+        }
+
         // Sanitize templateKey against LFI
         $templateKey = preg_replace('/[^a-zA-Z0-9_-]/', '', $templateKey);
         $viewPath = 'invitation/templates/' . $templateKey;
@@ -70,10 +86,12 @@ class InvitationController extends BaseController
         }
 
         return view($viewPath, [
-            'guest'        => $guest,
-            'event'        => $event,
-            'isEventEnded' => $isEventEnded,
-            'pageTitle'    => 'Undangan Resmi ' . esc($guest['name']) . ' — ' . esc($event['title']),
+            'guest'            => $guest,
+            'event'            => $event,
+            'scheduleDay'      => $scheduleDay,
+            'scheduleSessions' => $scheduleSessions,
+            'isEventEnded'     => $isEventEnded,
+            'pageTitle'        => 'Undangan Resmi ' . esc($guest['name']) . ' — ' . esc($event['title']),
         ]);
     }
 
@@ -157,12 +175,30 @@ class InvitationController extends BaseController
             $viewPath = 'invitation/templates/malam_apresiasi';
         }
 
+        $db = \Config\Database::connect();
+        $scheduleSessions = [];
+        $scheduleDay = $db->table('schedule_days')
+            ->where('event_id', 4)
+            ->orderBy('day_number', 'ASC')
+            ->get()
+            ->getRowArray();
+
+        if ($scheduleDay) {
+            $scheduleSessions = $db->table('schedule_sessions')
+                ->where('schedule_day_id', $scheduleDay['id'])
+                ->orderBy('sort_order', 'ASC')
+                ->get()
+                ->getResultArray();
+        }
+
         return view($viewPath, [
-            'guest'        => $dummyGuest,
-            'event'        => $dummyEvent,
-            'isEventEnded' => false,
-            'isPreview'    => true,
-            'pageTitle'    => 'Preview E-Invitation — ' . esc($templateKey),
+            'guest'            => $dummyGuest,
+            'event'            => $dummyEvent,
+            'scheduleDay'      => $scheduleDay,
+            'scheduleSessions' => $scheduleSessions,
+            'isEventEnded'     => false,
+            'isPreview'        => true,
+            'pageTitle'        => 'Preview E-Invitation — ' . esc($templateKey),
         ]);
     }
 }
