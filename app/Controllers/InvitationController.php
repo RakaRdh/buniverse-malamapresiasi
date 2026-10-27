@@ -43,7 +43,7 @@ class InvitationController extends BaseController
         $isEventEnded = (time() > $eventEndTimestamp);
 
         // 5. Determine active template
-        $templateKey = 'malam_apresiasi_luxury';
+        $templateKey = 'malam_apresiasi';
         if (!empty($guest['template_id'])) {
             $tpl = $db->table('invitation_templates')->where('id', $guest['template_id'])->where('is_active', 1)->get()->getRowArray();
             if ($tpl && !empty($tpl['template_key'])) {
@@ -66,7 +66,7 @@ class InvitationController extends BaseController
         $viewPath = 'invitation/templates/' . $templateKey;
 
         if (!is_file(APPPATH . 'Views/' . $viewPath . '.php')) {
-            $viewPath = 'invitation/templates/malam_apresiasi_luxury';
+            $viewPath = 'invitation/templates/malam_apresiasi';
         }
 
         return view($viewPath, [
@@ -129,7 +129,7 @@ class InvitationController extends BaseController
      */
     public function preview()
     {
-        $templateKey = trim((string)$this->request->getGet('template')) ?: 'malam_apresiasi_luxury';
+        $templateKey = trim((string)$this->request->getGet('template')) ?: 'malam_apresiasi';
         $templateKey = preg_replace('/[^a-zA-Z0-9_-]/', '', $templateKey);
 
         $dummyGuest = [
@@ -154,7 +154,7 @@ class InvitationController extends BaseController
 
         $viewPath = 'invitation/templates/' . $templateKey;
         if (!is_file(APPPATH . 'Views/' . $viewPath . '.php')) {
-            $viewPath = 'invitation/templates/malam_apresiasi_luxury';
+            $viewPath = 'invitation/templates/malam_apresiasi';
         }
 
         return view($viewPath, [
