@@ -42,3 +42,9 @@ $routes->get('qna', 'QnaController::index');
 
 // Media Proxy Route under Frontend domain (GET & HEAD)
 $routes->match(['get', 'head'], 'uploads/(:any)', 'MediaController::serve/$1');
+
+// E-Invitation Routes
+$routes->get('invitation/preview', 'InvitationController::preview');
+$routes->get('invitation/(:segment)', 'InvitationController::show/$1');
+$routes->post('invitation/rsvp', 'InvitationController::submitRsvp');
+
