@@ -141,7 +141,7 @@ class Home extends BaseController
                 $site['socials'] = $live['site']['socials'] ?? [];
             }
 
-            // Define Malam Apresiasi (MAP) Black & Red Palette Theme Properties
+            // Define Malam Apresiasi (MAP) BSA Primary, Secondary & Secondary 2 Palette Theme Properties
             $mapThemeTokens = [
                 // Black Palette (13 levels)
                 '--black-1'  => '#ffffff',
@@ -173,54 +173,114 @@ class Home extends BaseController
                 '--neutral-12' => '#141414',
                 '--neutral-13' => '#000000',
 
-                // Red Palette (10 levels)
-                '--red-1'  => '#f7e7e7',
-                '--red-2'  => '#ebc4c4',
-                '--red-3'  => '#db9696',
-                '--red-4'  => '#cb6565',
-                '--red-5'  => '#bb3636',
-                '--red-6'  => '#ac0a0a',
-                '--red-7'  => '#920909',
-                '--red-8'  => '#7a0707',
-                '--red-9'  => '#620606',
-                '--red-10' => '#4d0505',
+                // BSA Primary Palette (10 levels)
+                '--bsa-primary-1'  => '#fce6e6',
+                '--bsa-primary-2'  => '#f9c2c2',
+                '--bsa-primary-3'  => '#f49292',
+                '--bsa-primary-4'  => '#ef5f5f',
+                '--bsa-primary-5'  => '#ea2f2f',
+                '--bsa-primary-6'  => '#e50101',
+                '--bsa-primary-7'  => '#c30101',
+                '--bsa-primary-8'  => '#a30101',
+                '--bsa-primary-9'  => '#830101',
+                '--bsa-primary-10' => '#670000',
 
-                // Primary 1 (Red Aliases)
-                '--primary-1-1'  => '#f7e7e7',
-                '--primary-1-2'  => '#ebc4c4',
-                '--primary-1-3'  => '#db9696',
-                '--primary-1-4'  => '#cb6565',
-                '--primary-1-5'  => '#bb3636',
-                '--primary-1-6'  => '#ac0a0a',
-                '--primary-1-7'  => '#920909',
-                '--primary-1-8'  => '#7a0707',
-                '--primary-1-9'  => '#620606',
-                '--primary-1-10' => '#4d0505',
+                // BSA Secondary Palette (10 levels)
+                '--bsa-secondary-1'  => '#f5e6e6',
+                '--bsa-secondary-2'  => '#e7c2c2',
+                '--bsa-secondary-3'  => '#d39192',
+                '--bsa-secondary-4'  => '#bf5e5f',
+                '--bsa-secondary-5'  => '#ab2e2f',
+                '--bsa-secondary-6'  => '#990001',
+                '--bsa-secondary-7'  => '#820001',
+                '--bsa-secondary-8'  => '#6d0001',
+                '--bsa-secondary-9'  => '#570001',
+                '--bsa-secondary-10' => '#450000',
+
+                // BSA Secondary 2 Palette (10 levels)
+                '--bsa-secondary-2-1'  => '#f1e6e6',
+                '--bsa-secondary-2-2'  => '#ddc2c2',
+                '--bsa-secondary-2-3'  => '#c39191',
+                '--bsa-secondary-2-4'  => '#a75e5e',
+                '--bsa-secondary-2-5'  => '#8c2e2e',
+                '--bsa-secondary-2-6'  => '#730000',
+                '--bsa-secondary-2-7'  => '#620000',
+                '--bsa-secondary-2-8'  => '#520000',
+                '--bsa-secondary-2-9'  => '#420000',
+                '--bsa-secondary-2-10' => '#340000',
+
+                // Blue Palette remapped to BSA Secondary
+                '--blue-1'  => '#f5e6e6',
+                '--blue-2'  => '#e7c2c2',
+                '--blue-3'  => '#d39192',
+                '--blue-4'  => '#bf5e5f',
+                '--blue-5'  => '#ab2e2f',
+                '--blue-6'  => '#990001',
+                '--blue-7'  => '#820001',
+                '--blue-8'  => '#6d0001',
+                '--blue-9'  => '#570001',
+                '--blue-10' => '#450000',
+
+                // Red Palette mapped to BSA Primary
+                '--red-1'  => '#fce6e6',
+                '--red-2'  => '#f9c2c2',
+                '--red-3'  => '#f49292',
+                '--red-4'  => '#ef5f5f',
+                '--red-5'  => '#ea2f2f',
+                '--red-6'  => '#e50101',
+                '--red-7'  => '#c30101',
+                '--red-8'  => '#a30101',
+                '--red-9'  => '#830101',
+                '--red-10' => '#670000',
+
+                // Primary 1 (BSA Primary Aliases)
+                '--primary-1-1'  => '#fce6e6',
+                '--primary-1-2'  => '#f9c2c2',
+                '--primary-1-3'  => '#f49292',
+                '--primary-1-4'  => '#ef5f5f',
+                '--primary-1-5'  => '#ea2f2f',
+                '--primary-1-6'  => '#e50101',
+                '--primary-1-7'  => '#c30101',
+                '--primary-1-8'  => '#a30101',
+                '--primary-1-9'  => '#830101',
+                '--primary-1-10' => '#670000',
+
+                // Primary 2 (BSA Secondary Aliases)
+                '--primary-2-1'  => '#f5e6e6',
+                '--primary-2-2'  => '#e7c2c2',
+                '--primary-2-3'  => '#d39192',
+                '--primary-2-4'  => '#bf5e5f',
+                '--primary-2-5'  => '#ab2e2f',
+                '--primary-2-6'  => '#990001',
+                '--primary-2-7'  => '#820001',
+                '--primary-2-8'  => '#6d0001',
+                '--primary-2-9'  => '#570001',
+                '--primary-2-10' => '#450000',
 
                 // Semantic Tokens: BASE ADALAH HITAM (black-13: #000000)
                 '--bg-page'                  => '#000000',
                 '--bg-section-alt'           => '#141414',
                 '--bg-card'                  => '#1f1f1f',
                 '--bg-card-gradient'         => 'linear-gradient(135deg, #1f1f1f 0%, #141414 100%)',
-                '--bg-pill'                  => '#ebc4c4',
-                '--bg-pill-active'           => '#ac0a0a',
+                '--bg-pill'                  => '#e7c2c2',
+                '--bg-pill-active'           => '#ab2e2f',
                 '--text-primary'             => '#ffffff',
                 '--text-secondary'           => '#d9d9d9',
                 '--text-muted'               => '#8c8c8c',
                 '--text-dark'                => '#000000',
-                '--accent-cyan'              => '#ac0a0a',
-                '--accent-blue'              => '#ac0a0a',
-                '--accent-light'             => '#cb6565',
-                '--accent-glow'              => 'rgba(172, 10, 10, 0.35)',
+                '--accent-cyan'              => '#ab2e2f',
+                '--accent-blue'              => '#ab2e2f',
+                '--accent-light'             => '#d39192',
+                '--accent-glow'              => 'rgba(171, 46, 47, 0.45)',
                 '--border-divider'           => 'rgba(255, 255, 255, 0.12)',
-                '--border-subtle'            => 'rgba(172, 10, 10, 0.25)',
+                '--border-subtle'            => 'rgba(171, 46, 47, 0.35)',
                 '--navbar-bg'                => 'transparent',
-                '--navbar-cta-bg'            => '#ac0a0a',
+                '--navbar-cta-bg'            => '#e50101',
                 '--navbar-cta-text'          => '#ffffff',
-                '--navbar-cta-hover-bg'      => '#920909',
+                '--navbar-cta-hover-bg'      => '#ab2e2f',
                 '--navbar-cta-hover-text'    => '#ffffff',
-                '--navbar-cta-hover-outline' => '#ac0a0a',
-                '--footer-bg'                => '#000000',
+                '--navbar-cta-hover-outline' => '#e50101',
+                '--footer-bg'                => '#450000',
                 '--footer-social-bg'         => '#262626',
                 '--footer-social-color'      => '#ffffff',
                 '--footer-text-color'        => '#d9d9d9',
@@ -260,17 +320,24 @@ class Home extends BaseController
                 if (!empty($liveOverview['badge'])) {
                     $overview['badge'] = $liveOverview['badge'];
                 }
+                if (!empty($liveOverview['title'])) {
+                    $overview['title'] = $liveOverview['title'];
+                    $overview['heading'] = $liveOverview['title'];
+                }
                 if (!empty($liveOverview['intro'])) {
                     $overview['intro'] = $liveOverview['intro'];
-                }
-                if (!empty($liveOverview['collage_images'])) {
-                    $overview['collage_images'] = $liveOverview['collage_images'];
+                    $overview['intro_text'] = $liveOverview['intro'];
                 }
                 if (!empty($liveOverview['content'])) {
+                    $overview['content'] = $liveOverview['content'];
+                    $overview['body_text'] = $liveOverview['content'];
                     $paras = array_filter(explode("\n\n", str_replace("\r\n", "\n", $liveOverview['content'])));
                     if (!empty($paras)) {
                         $overview['paragraphs'] = array_values($paras);
                     }
+                }
+                if (!empty($liveOverview['collage_images'])) {
+                    $overview['collage_images'] = $liveOverview['collage_images'];
                 }
                 $economicModel = $overview;
             }

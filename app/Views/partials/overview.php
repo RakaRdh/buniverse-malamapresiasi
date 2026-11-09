@@ -6,12 +6,21 @@
           <span>Overview</span>
         </h2>
         <div class="overview-body">
-          <p>
-            Tahun 2025 menjadi momentum penting bagi pembangunan nasional. Di tengah tantangan global dan dinamika nasional yang terus berkembang. Pemerintah daerah serta pelaku memainkan peran sentral dalam menjaga stabilitas ekonomi, mendorong inovasi, sekaligus mempercepat pembangunan yang inklusif dan berkelanjutan.
-          </p>
-          <p>
-            Penghargaan ini diselenggarakan sebagai bentuk apresiasi atas dedikasi, inovasi, dan pencapaian para kepala daerah, pelaku industri serta para pemimpin yang telah menunjukkan kinerja luar biasa di bidangnya. Mereka telah berhasil menciptakan dampak nyata yang dirasakan oleh masyarakat sekaligus sukses juga menjadi agen perubahan.
-          </p>
+          <?php if (!empty($overview['intro'])): ?>
+            <?php 
+              $introParagraphs = array_filter(explode("\n\n", str_replace("\r\n", "\n", $overview['intro'])));
+              if (empty($introParagraphs)) {
+                  $introParagraphs = [$overview['intro']];
+              }
+            ?>
+            <?php foreach ($introParagraphs as $p): ?>
+              <p><?= nl2br(esc(trim($p))) ?></p>
+            <?php endforeach; ?>
+          <?php else: ?>
+            <p>
+              Tahun 2025 menjadi momentum penting bagi pembangunan nasional. Di tengah tantangan global dan dinamika nasional yang terus berkembang. Pemerintah daerah serta pelaku memainkan peran sentral dalam menjaga stabilitas ekonomi, mendorong inovasi, sekaligus mempercepat pembangunan yang inklusif dan berkelanjutan.
+            </p>
+          <?php endif; ?>
         </div>
       </div>
       <div class="overview-right">

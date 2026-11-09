@@ -14,11 +14,14 @@
 
 // Format event date
 $eventDateStr = !empty($site['dates']) ? $site['dates'] : 'KAMIS, 20 NOVEMBER 2026';
-if (!empty($schedule['day_1']['label'])) {
-    $eventDateStr = strtoupper($schedule['day_1']['label']);
-} elseif (!empty($schedule['day_1']['date'])) {
+$eventDayNum = '20';
+$eventMonthYear = 'November 2026';
+
+if (!empty($schedule['day_1']['date'])) {
     $ts = strtotime($schedule['day_1']['date']);
     if ($ts !== false) {
+        $eventDayNum = date('j', $ts);
+        $eventMonthYear = date('F Y', $ts);
         $dayNames = [
             'Sunday' => 'MINGGU', 'Monday' => 'SENIN', 'Tuesday' => 'SELASA',
             'Wednesday' => 'RABU', 'Thursday' => 'KAMIS', 'Friday' => 'JUMAT', 'Saturday' => 'SABTU'
@@ -37,8 +40,11 @@ if (!empty($schedule['day_1']['label'])) {
     }
 }
 
-// Format venue
-$eventVenue = !empty($site['venue']) ? strtoupper($site['venue']) : 'BALLROOM 1, HOTEL MULIA SENAYAN';
+// Format venue into two lines
+$rawVenue = !empty($site['venue']) ? $site['venue'] : 'Ballroom 1, Hotel Mulia Senayan';
+$vParts = array_map('trim', explode(',', $rawVenue));
+$venueLine1 = !empty($vParts[0]) ? $vParts[0] . ',' : 'Ballroom 1,';
+$venueLine2 = !empty($vParts[1]) ? $vParts[1] : 'Hotel Mulia Senayan';
 
 // Items list from database schedule day_1
 $scheduleItems = !empty($schedule['day_1']['items']) ? $schedule['day_1']['items'] : (!empty($schedule['day_1']['sessions']) ? $schedule['day_1']['sessions'] : []);
@@ -64,6 +70,9 @@ if (!empty($scheduleItems)) {
 if (empty($eventTime)) {
     $eventTime = '18.00 WIB';
 }
+$tBits = explode(' ', trim($eventTime));
+$timeVal = $tBits[0] ?? '18.00';
+$timeUnit = !empty($tBits[1]) ? $tBits[1] : 'WIB';
 ?>
 
 <section class="schedule-section map-schedule-section" id="schedule">
@@ -77,37 +86,35 @@ if (empty($eventTime)) {
       </div>
     </div>
 
-    <!-- 2. Dark Rounded Info Bar: Date, Venue, Time (Gambar 3) -->
-    <div class="map-schedule-info-bar">
-      <div class="map-info-item">
-        <span class="map-info-icon">
-          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-            <line x1="16" y1="2" x2="16" y2="6"></line>
-            <line x1="8" y1="2" x2="8" y2="6"></line>
-            <line x1="3" y1="10" x2="21" y2="10"></line>
-          </svg>
-        </span>
-        <span class="map-info-text"><?= esc($eventDateStr) ?></span>
-      </div>
+    <!-- 2. Schedule Event Info Banner: schedule.webp Background with Red Primary Filter & 3 Columns -->
+    <div class="schedule-banner-card" data-aos="fade-up" data-aos-duration="1000">
+      <div class="schedule-banner-inner">
+        
+        <!-- Column 1: APPRECIATION DATE -->
+        <div class="schedule-banner-col">
+          <span class="schedule-col-tag">APPRECIATION</span>
+          <span class="schedule-col-main"><?= esc($eventDayNum) ?></span>
+          <span class="schedule-col-sub"><?= esc($eventMonthYear) ?></span>
+        </div>
 
-      <div class="map-info-item">
-        <span class="map-info-icon">
-          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
-            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 0 1 0-5 2.5 2.5 0 0 1 0 5z"/>
-          </svg>
-        </span>
-        <span class="map-info-text"><?= esc($eventVenue) ?></span>
-      </div>
+        <div class="schedule-banner-divider"></div>
 
-      <div class="map-info-item">
-        <span class="map-info-icon">
-          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="10"></circle>
-            <polyline points="12 6 12 12 16 14"></polyline>
-          </svg>
-        </span>
-        <span class="map-info-text"><?= esc($eventTime) ?></span>
+        <!-- Column 2: VENUE -->
+        <div class="schedule-banner-col">
+          <span class="schedule-col-tag">VENUE</span>
+          <span class="schedule-col-main"><?= esc($venueLine1) ?></span>
+          <span class="schedule-col-sub"><?= esc($venueLine2) ?></span>
+        </div>
+
+        <div class="schedule-banner-divider"></div>
+
+        <!-- Column 3: TIME -->
+        <div class="schedule-banner-col">
+          <span class="schedule-col-tag">TIME</span>
+          <span class="schedule-col-main"><?= esc($timeVal) ?></span>
+          <span class="schedule-col-sub"><?= esc($timeUnit) ?></span>
+        </div>
+
       </div>
     </div>
 

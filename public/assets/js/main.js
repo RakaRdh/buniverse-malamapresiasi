@@ -1333,5 +1333,51 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   initStatsCounterAnimation();
+
+  // 14. Scroll Reveal on first view (Hero to subsequent sections starting from Overview)
+  const initScrollReveal = () => {
+    const revealSections = document.querySelectorAll(
+      '.overview-section, .about-us-section, .categories-section, .schedule-section'
+    );
+    if (!revealSections.length) return;
+
+    revealSections.forEach((section) => {
+      section.classList.add('scroll-reveal');
+    });
+
+    if ('IntersectionObserver' in window) {
+      const revealObserver = new IntersectionObserver(
+        (entries, observer) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('is-revealed');
+              observer.unobserve(entry.target);
+            }
+          });
+        },
+        {
+          root: null,
+          rootMargin: '0px 0px -40px 0px',
+          threshold: 0.08,
+        }
+      );
+
+      const scrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
+
+      revealSections.forEach((section) => {
+        const rect = section.getBoundingClientRect();
+        // If already well within viewport on deep reload, reveal immediately
+        if (scrollY > 100 && rect.top < window.innerHeight && rect.bottom > 0) {
+          section.classList.add('is-revealed');
+        } else {
+          revealObserver.observe(section);
+        }
+      });
+    } else {
+      revealSections.forEach((section) => section.classList.add('is-revealed'));
+    }
+  };
+
+  initScrollReveal();
 });
 

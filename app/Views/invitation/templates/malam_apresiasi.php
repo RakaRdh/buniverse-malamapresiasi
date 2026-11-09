@@ -35,20 +35,68 @@
             --black-12: #141414;
             --black-13: #000000;
 
-            /* Red Palette */
-            --red-1: #f7e7e7;
-            --red-2: #ebc4c4;
-            --red-3: #db9696;
-            --red-4: #cb6565;
-            --red-5: #bb3636;
-            --red-6: #ac0a0a;
-            --red-7: #920909;
-            --red-8: #7a0707;
-            --red-9: #620606;
-            --red-10: #4d0505;
+            /* BSA Primary Palette */
+            --bsa-primary-1: #fce6e6;
+            --bsa-primary-2: #f9c2c2;
+            --bsa-primary-3: #f49292;
+            --bsa-primary-4: #ef5f5f;
+            --bsa-primary-5: #ea2f2f;
+            --bsa-primary-6: #e50101;
+            --bsa-primary-7: #c30101;
+            --bsa-primary-8: #a30101;
+            --bsa-primary-9: #830101;
+            --bsa-primary-10: #670000;
+
+            /* BSA Secondary Palette */
+            --bsa-secondary-1: #f5e6e6;
+            --bsa-secondary-2: #e7c2c2;
+            --bsa-secondary-3: #d39192;
+            --bsa-secondary-4: #bf5e5f;
+            --bsa-secondary-5: #ab2e2f;
+            --bsa-secondary-6: #990001;
+            --bsa-secondary-7: #820001;
+            --bsa-secondary-8: #6d0001;
+            --bsa-secondary-9: #570001;
+            --bsa-secondary-10: #450000;
+
+            /* BSA Secondary 2 Palette */
+            --bsa-secondary-2-1: #f1e6e6;
+            --bsa-secondary-2-2: #ddc2c2;
+            --bsa-secondary-2-3: #c39191;
+            --bsa-secondary-2-4: #a75e5e;
+            --bsa-secondary-2-5: #8c2e2e;
+            --bsa-secondary-2-6: #730000;
+            --bsa-secondary-2-7: #620000;
+            --bsa-secondary-2-8: #520000;
+            --bsa-secondary-2-9: #420000;
+            --bsa-secondary-2-10: #340000;
+
+            /* Blue Palette remapped to BSA Secondary */
+            --blue-1: var(--bsa-secondary-1);
+            --blue-2: var(--bsa-secondary-2);
+            --blue-3: var(--bsa-secondary-3);
+            --blue-4: var(--bsa-secondary-4);
+            --blue-5: var(--bsa-secondary-5);
+            --blue-6: var(--bsa-secondary-6);
+            --blue-7: var(--bsa-secondary-7);
+            --blue-8: var(--bsa-secondary-8);
+            --blue-9: var(--bsa-secondary-9);
+            --blue-10: var(--bsa-secondary-10);
+
+            /* Backward-compatible Red Tokens mapped to BSA Secondary */
+            --red-1: var(--bsa-secondary-1);
+            --red-2: var(--bsa-secondary-2);
+            --red-3: var(--bsa-secondary-3);
+            --red-4: var(--bsa-secondary-4);
+            --red-5: var(--bsa-secondary-5);
+            --red-6: var(--bsa-secondary-6);
+            --red-7: var(--bsa-secondary-7);
+            --red-8: var(--bsa-secondary-8);
+            --red-9: var(--bsa-secondary-9);
+            --red-10: var(--bsa-secondary-10);
 
             /* Accent Tokens */
-            --border-red: rgba(172, 10, 10, 0.4);
+            --border-red: rgba(171, 46, 47, 0.45);
             --border-subtle: rgba(255, 255, 255, 0.1);
             --text-primary: #ffffff;
             --text-secondary: #d9d9d9;
@@ -76,7 +124,7 @@
             color: var(--text-primary);
         }
 
-        /* Outer Fullscreen Container: Gradient dari #000000 (atas) ke #4d0505 (bawah) */
+        /* Outer Fullscreen Container: Gradient dari #000000 (atas) ke #450000 (bawah) */
         .invitation-wrapper {
             width: 100%;
             height: 100%;
@@ -84,7 +132,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            background: linear-gradient(180deg, #000000 0%, #4d0505 100%);
+            background: linear-gradient(180deg, #000000 0%, #450000 100%);
             position: relative;
         }
 
@@ -161,23 +209,23 @@
         }
 
         #section-detail {
-            background: linear-gradient(180deg, #000000 0%, #150202 100%);
+            background: linear-gradient(180deg, #000000 0%, #450000 100%);
         }
 
         #section-rundown {
-            background: linear-gradient(180deg, #150202 0%, #360303 100%);
+            background: linear-gradient(180deg, #450000 0%, #6d0001 100%);
         }
 
         #section-rsvp {
-            background: linear-gradient(180deg, #360303 0%, #610505 100%);
+            background: linear-gradient(180deg, #6d0001 0%, #990001 100%);
         }
 
         #section-contact {
-            background: linear-gradient(180deg, #610505 0%, #880808 100%);
+            background: linear-gradient(180deg, #990001 0%, #ab2e2f 100%);
         }
 
         #section-gratitude {
-            background: linear-gradient(180deg, #880808 0%, #ac0a0a 100%);
+            background: linear-gradient(180deg, #ab2e2f 0%, #450000 100%);
         }
 
         .slide-content {
@@ -239,12 +287,12 @@
             letter-spacing: 0.3px;
         }
 
-        /* Glassmorphism Guest Card: Container Merah #AC0A0A opacity 25% + backdrop-filter glass */
+        /* Glassmorphism Guest Card: Container BSA Secondary-5 #ab2e2f opacity 25% + backdrop-filter glass */
         .cover-guest-card {
-            background: rgba(172, 10, 10, 0.25);
+            background: rgba(171, 46, 47, 0.25);
             backdrop-filter: blur(14px);
             -webkit-backdrop-filter: blur(14px);
-            border: 1px solid rgba(172, 10, 10, 0.45);
+            border: 1px solid rgba(171, 46, 47, 0.45);
             border-radius: 14px;
             padding: clamp(12px, 2vh, 18px) 16px;
             text-align: center;
@@ -271,7 +319,7 @@
         .btn-open-invitation {
             display: block;
             width: 100%;
-            background: #ac0a0a;
+            background: #ab2e2f;
             color: #ffffff;
             font-size: clamp(13px, 1.8vh, 15px);
             font-weight: 700;
@@ -280,13 +328,13 @@
             border-radius: 12px;
             border: none;
             cursor: pointer;
-            box-shadow: 0 4px 18px rgba(172, 10, 10, 0.5);
+            box-shadow: 0 4px 18px rgba(171, 46, 47, 0.55);
             transition: transform 0.2s ease, background 0.2s ease;
         }
 
         .btn-open-invitation:active {
             transform: scale(0.98);
-            background: #920909;
+            background: #990001;
         }
 
         /* ================= 2. DETAIL SECTION (Waktu & Tempat) ================= */
@@ -308,18 +356,18 @@
             height: clamp(38px, 5vh, 44px);
             border-radius: 10px;
             background: transparent;
-            border: 1.5px solid #ac0a0a;
+            border: 1.5px solid #ab2e2f;
             display: flex;
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
-            color: #ac0a0a;
+            color: #ab2e2f;
         }
 
         .detail-icon-box svg {
             width: clamp(18px, 2.5vh, 20px);
             height: clamp(18px, 2.5vh, 20px);
-            stroke: #ac0a0a;
+            stroke: #ab2e2f;
             stroke-width: 2;
         }
 
@@ -361,11 +409,11 @@
 
         /* ================= 3. RUNDOWN SECTION ================= */
         .rundown-table-card {
-            background: rgba(20, 13, 15, 0.7);
+            background: rgba(69, 0, 0, 0.75);
             backdrop-filter: blur(14px);
             -webkit-backdrop-filter: blur(14px);
             border-radius: 16px;
-            border: 1px solid rgba(172, 10, 10, 0.45);
+            border: 1px solid rgba(171, 46, 47, 0.5);
             overflow: hidden;
             width: 100%;
             max-height: clamp(370px, 58vh, 500px);
@@ -378,11 +426,11 @@
             display: grid;
             grid-template-columns: 92px 1fr;
             padding: 12px 16px;
-            background: linear-gradient(90deg, rgba(172, 10, 10, 0.85) 0%, rgba(122, 7, 7, 0.85) 100%);
+            background: linear-gradient(90deg, rgba(171, 46, 47, 0.85) 0%, rgba(153, 0, 1, 0.85) 100%);
             font-weight: 700;
             font-size: 13.5px;
             color: #ffffff;
-            border-bottom: 1px solid rgba(172, 10, 10, 0.5);
+            border-bottom: 1px solid rgba(171, 46, 47, 0.5);
             letter-spacing: 0.3px;
             flex-shrink: 0;
         }
@@ -394,7 +442,7 @@
             -webkit-overflow-scrolling: touch;
             max-height: 100%;
             scrollbar-width: thin;
-            scrollbar-color: #ac0a0a rgba(20, 13, 15, 0.6);
+            scrollbar-color: #ab2e2f rgba(109, 0, 1, 0.6);
         }
 
         /* Custom Red Scrollbar for Webkit / Mobile Chrome */
@@ -403,16 +451,16 @@
         }
 
         .rundown-table-body::-webkit-scrollbar-track {
-            background: rgba(20, 13, 15, 0.6);
+            background: rgba(109, 0, 1, 0.6);
         }
 
         .rundown-table-body::-webkit-scrollbar-thumb {
-            background: #ac0a0a;
+            background: #ab2e2f;
             border-radius: 6px;
         }
 
         .rundown-table-body::-webkit-scrollbar-thumb:hover {
-            background: #d41111;
+            background: #bf5e5f;
         }
 
         .rundown-row {
@@ -478,7 +526,7 @@
             justify-content: center;
             padding: 14px 10px;
             border-radius: 12px;
-            background: rgba(20, 13, 15, 0.6);
+            background: rgba(69, 0, 0, 0.65);
             border: 1px solid rgba(255, 255, 255, 0.15);
             color: #ffffff;
             font-size: 14px;
@@ -507,7 +555,7 @@
 
         .rsvp-textarea {
             width: 100%;
-            background: rgba(20, 13, 15, 0.6);
+            background: rgba(69, 0, 0, 0.65);
             border: 1px solid rgba(255, 255, 255, 0.15);
             border-radius: 12px;
             padding: 12px 14px;
@@ -521,12 +569,12 @@
 
         .rsvp-textarea:focus {
             outline: none;
-            border-color: var(--red-6);
+            border-color: var(--bsa-secondary-5, #ab2e2f);
         }
 
         .btn-submit-rsvp {
             width: 100%;
-            background: #ac0a0a;
+            background: #ab2e2f;
             color: #ffffff;
             font-size: 14px;
             font-weight: 700;
@@ -534,7 +582,7 @@
             border-radius: 12px;
             border: none;
             cursor: pointer;
-            box-shadow: 0 4px 16px rgba(172, 10, 10, 0.4);
+            box-shadow: 0 4px 16px rgba(171, 46, 47, 0.4);
             transition: transform 0.2s ease;
         }
 
@@ -548,7 +596,7 @@
             align-items: center;
             justify-content: space-between;
             padding: 14px 16px;
-            background: rgba(20, 13, 15, 0.55);
+            background: rgba(69, 0, 0, 0.6);
             backdrop-filter: blur(8px);
             border: 1px solid var(--border-subtle);
             border-radius: 12px;
@@ -585,7 +633,7 @@
             text-align: center;
             padding: 28px 20px;
             border-radius: 18px;
-            background: rgba(20, 13, 15, 0.55);
+            background: rgba(69, 0, 0, 0.6);
             backdrop-filter: blur(10px);
             border: 1px solid var(--border-red);
         }
@@ -639,10 +687,10 @@
             width: 42px;
             height: 42px;
             border-radius: 50%;
-            background: rgba(20, 13, 15, 0.85);
+            background: rgba(69, 0, 0, 0.85);
             backdrop-filter: blur(8px);
             -webkit-backdrop-filter: blur(8px);
-            border: 1.5px solid #ac0a0a;
+            border: 1.5px solid #ab2e2f;
             color: #ffffff;
             display: flex;
             align-items: center;
@@ -676,10 +724,10 @@
             left: 14px;
             right: 14px;
             height: 56px;
-            background: rgba(14, 9, 11, 0.88);
+            background: rgba(69, 0, 0, 0.9);
             backdrop-filter: blur(14px);
             -webkit-backdrop-filter: blur(14px);
-            border: 1px solid rgba(172, 10, 10, 0.4);
+            border: 1px solid rgba(171, 46, 47, 0.4);
             border-radius: 18px;
             z-index: 999;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
@@ -749,8 +797,8 @@
             width: 20px;
             height: 3px;
             border-radius: 2px;
-            background: #ac0a0a;
-            box-shadow: 0 0 8px #ac0a0a;
+            background: #ab2e2f;
+            box-shadow: 0 0 8px #ab2e2f;
         }
 
         /* ================= RSVP MODALS ================= */
@@ -783,7 +831,7 @@
             width: 100%;
             max-width: 340px;
             text-align: center;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8), 0 0 40px rgba(172, 10, 10, 0.2);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8), 0 0 40px rgba(171, 46, 47, 0.25);
             transform: scale(0.92);
             transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
             position: relative;
@@ -806,8 +854,8 @@
         .rsvp-spinner {
             width: 44px;
             height: 44px;
-            border: 3px solid rgba(172, 10, 10, 0.25);
-            border-top-color: #ac0a0a;
+            border: 3px solid rgba(171, 46, 47, 0.25);
+            border-top-color: #ab2e2f;
             border-radius: 50%;
             animation: rsvpSpin 0.8s linear infinite;
             margin: 0 auto 16px;
@@ -834,7 +882,7 @@
         }
 
         .btn-modal-close {
-            background: linear-gradient(135deg, #ac0a0a, #7d0707);
+            background: linear-gradient(135deg, #ab2e2f, #990001);
             color: #ffffff;
             border: none;
             padding: 10px 24px;
@@ -1608,10 +1656,10 @@
                     }
                 }
 
-                // Interpolate: Red (172, 10, 10) to Black (20, 20, 20)
-                const r = Math.round(172 + (20 - 172) * ratio);
-                const g = Math.round(10 + (20 - 10) * ratio);
-                const b = Math.round(10 + (20 - 10) * ratio);
+                // Interpolate: BSA Secondary-5 (171, 46, 47) to BSA Secondary-10 (69, 0, 0)
+                const r = Math.round(171 + (69 - 171) * ratio);
+                const g = Math.round(46 + (0 - 46) * ratio);
+                const b = Math.round(47 + (0 - 47) * ratio);
                 return `rgba(${r}, ${g}, ${b}, ${alpha.toFixed(2)})`;
             }
 
