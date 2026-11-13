@@ -18,6 +18,9 @@
     <!-- AOS (Animate On Scroll) CSS -->
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 
+    <!-- Simplex Noise CDN for Cascading Wave Effect -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/simplex-noise/2.4.0/simplex-noise.min.js"></script>
+
     <style>
         :root {
             /* Black Palette */
@@ -897,15 +900,54 @@
             opacity: 0.9;
         }
 
-        /* Fullscreen Particle Network Canvas Background */
-        .particle-bg-canvas {
+        /* ================= CASCADING CORNER WAVES CANVAS ================= */
+        .wave-corner-canvas {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
             pointer-events: none;
-            z-index: 1; /* Di bawah konten slide (z-index: 2), di atas background section */
+            z-index: 1; /* Di bawah konten slide (z-index: 2), di atas background slide */
+            will-change: transform;
+            /* Mask linear horizontal: memudarkan ujung awal dan akhir kanvas secara bertahap agar tidak ada garis potong patah */
+            mask-image: linear-gradient(to right, transparent 0%, black 18%, black 82%, transparent 100%);
+            -webkit-mask-image: linear-gradient(to right, transparent 0%, black 18%, black 82%, transparent 100%);
+        }
+
+        /* Pojok Kanan Atas (Top-Right Corner Wave) - Miring 45 derajat & ujung memudar mulus tanpa patah */
+        .wave-canvas-top-right {
+            top: -110px;
+            right: -120px;
+            width: 640px;
+            height: 280px;
+            transform: rotate(45deg);
+            transform-origin: center center;
+            opacity: 0.95;
+        }
+
+        /* Pojok Kiri Bawah (Bottom-Left Corner Wave) - Miring 45 derajat & ujung memudar mulus tanpa patah */
+        .wave-canvas-bottom-left {
+            bottom: -110px;
+            left: -120px;
+            width: 640px;
+            height: 280px;
+            transform: rotate(45deg);
+            transform-origin: center center;
+            opacity: 0.95;
+        }
+
+        @media (max-width: 480px) {
+            .wave-canvas-top-right {
+                width: 580px;
+                height: 260px;
+                top: -95px;
+                right: -105px;
+                transform: rotate(45deg);
+            }
+            .wave-canvas-bottom-left {
+                width: 580px;
+                height: 260px;
+                bottom: -95px;
+                left: -105px;
+                transform: rotate(45deg);
+            }
         }
     </style>
 </head>
@@ -915,8 +957,9 @@
     <div class="invitation-wrapper">
         <div class="invitation-container">
 
-            <!-- Fullscreen Particle Network Canvas Background -->
-            <canvas id="particleCanvas" class="particle-bg-canvas"></canvas>
+            <!-- Cascading Waves Corner Elements (Pojok Kanan Atas & Pojok Kiri Bawah) -->
+            <canvas id="waveCanvasTopRight" class="wave-corner-canvas wave-canvas-top-right"></canvas>
+            <canvas id="waveCanvasBottomLeft" class="wave-corner-canvas wave-canvas-bottom-left"></canvas>
 
             <!-- Audio Element (Audio MAP, default 30% volume) -->
             <audio id="invitationAudio" src="<?= base_url('assets/audio/audio_map.mpeg') ?>" loop
@@ -1581,135 +1624,248 @@
                 });
         }
 
-        // ================= PARTICLE NETWORK ENGINE (Full Screen JulianLaval Style) =================
-        /*
-         * Aturan Warna Partikel (1 Layar Penuh):
-         * 1. Awalnya warna partikel di seluruh layar SAMA, yaitu MERAH (#ac0a0a).
-         * 2. Partikel tetap merah selama berada di Cover, Detail, Rundown, hingga RSVP.
-         * 3. Warna partikel baru mulai bertransisi perlahan ke warna HITAM (#141414) saat user memasuki Section Contact.
-         * 4. Ketika mentok di bawah (Section Gratitude dengan background merah solid), warna partikel menjadi HITAM penuh.
-         */
-        class FullscreenParticleNetwork {
-            constructor(canvasId, particleCount, connectionDist) {
+        // ================= CASCADING CORNER WAVES ENGINE =================
+        // Standalone SimplexNoise fallback (Stefan Gustavson algorithm)
+        (function() {
+            if (typeof window.SimplexNoise === 'undefined') {
+                window.SimplexNoise = class {
+                    constructor(randomOrSeed = Math.random) {
+                        const random = typeof randomOrSeed === 'function' ? randomOrSeed : () => Math.random();
+                        this.p = new Uint8Array(256);
+                        for (let i = 0; i < 256; i++) this.p[i] = i;
+                        for (let i = 255; i > 0; i--) {
+                            const n = Math.floor((i + 1) * random());
+                            const q = this.p[i];
+                            this.p[i] = this.p[n];
+                            this.p[n] = q;
+                        }
+                        this.perm = new Uint8Array(512);
+                        this.permMod12 = new Uint8Array(512);
+                        for (let i = 0; i < 512; i++) {
+                            this.perm[i] = this.p[i & 255];
+                            this.permMod12[i] = (this.perm[i] % 12);
+                        }
+                    }
+                    noise3D(xin, yin, zin) {
+                        const grad3 = [
+                            [1,1,0],[-1,1,0],[1,-1,0],[-1,-1,0],
+                            [1,0,1],[-1,0,1],[1,0,-1],[-1,0,-1],
+                            [0,1,1],[0,-1,1],[0,1,-1],[0,-1,-1]
+                        ];
+                        const F3 = 1.0 / 3.0;
+                        const G3 = 1.0 / 6.0;
+                        const s = (xin + yin + zin) * F3;
+                        const i = Math.floor(xin + s);
+                        const j = Math.floor(yin + s);
+                        const k = Math.floor(zin + s);
+                        const t = (i + j + k) * G3;
+                        const X0 = i - t;
+                        const Y0 = j - t;
+                        const Z0 = k - t;
+                        const x0 = xin - X0;
+                        const y0 = yin - Y0;
+                        const z0 = zin - Z0;
+                        let i1, j1, k1, i2, j2, k2;
+                        if (x0 >= y0) {
+                            if (y0 >= z0) { i1=1; j1=0; k1=0; i2=1; j2=1; k2=0; }
+                            else if (x0 >= z0) { i1=1; j1=0; k1=0; i2=1; j2=0; k2=1; }
+                            else { i1=0; j1=0; k1=1; i2=1; j2=0; k2=1; }
+                        } else {
+                            if (y0 < z0) { i1=0; j1=0; k1=1; i2=0; j2=1; k2=1; }
+                            else if (x0 < z0) { i1=0; j1=1; k1=0; i2=0; j2=1; k2=1; }
+                            else { i1=0; j1=1; k1=0; i2=1; j2=1; k2=0; }
+                        }
+                        const x1 = x0 - i1 + G3, y1 = y0 - j1 + G3, z1 = z0 - k1 + G3;
+                        const x2 = x0 - i2 + 2.0 * G3, y2 = y0 - j2 + 2.0 * G3, z2 = z0 - k2 + 2.0 * G3;
+                        const x3 = x0 - 1.0 + 3.0 * G3, y3 = y0 - 1.0 + 3.0 * G3, z3 = z0 - 1.0 + 3.0 * G3;
+                        const ii = i & 255, jj = j & 255, kk = k & 255;
+                        let t0 = 0.6 - x0*x0 - y0*y0 - z0*z0, n0 = 0.0;
+                        if (t0 > 0) {
+                            t0 *= t0;
+                            const gi0 = this.permMod12[ii + this.perm[jj + this.perm[kk]]];
+                            n0 = t0 * t0 * (grad3[gi0][0]*x0 + grad3[gi0][1]*y0 + grad3[gi0][2]*z0);
+                        }
+                        let t1 = 0.6 - x1*x1 - y1*y1 - z1*z1, n1 = 0.0;
+                        if (t1 > 0) {
+                            t1 *= t1;
+                            const gi1 = this.permMod12[ii + i1 + this.perm[jj + j1 + this.perm[kk + k1]]];
+                            n1 = t1 * t1 * (grad3[gi1][0]*x1 + grad3[gi1][1]*y1 + grad3[gi1][2]*z1);
+                        }
+                        let t2 = 0.6 - x2*x2 - y2*y2 - z2*z2, n2 = 0.0;
+                        if (t2 > 0) {
+                            t2 *= t2;
+                            const gi2 = this.permMod12[ii + i2 + this.perm[jj + j2 + this.perm[kk + k2]]];
+                            n2 = t2 * t2 * (grad3[gi2][0]*x2 + grad3[gi2][1]*y2 + grad3[gi2][2]*z2);
+                        }
+                        let t3 = 0.6 - x3*x3 - y3*y3 - z3*z3, n3 = 0.0;
+                        if (t3 > 0) {
+                            t3 *= t3;
+                            const gi3 = this.permMod12[ii + 1 + this.perm[jj + 1 + this.perm[kk + 1]]];
+                            n3 = t3 * t3 * (grad3[gi3][0]*x3 + grad3[gi3][1]*y3 + grad3[gi3][2]*z3);
+                        }
+                        return 32.0 * (n0 + n1 + n2 + n3);
+                    }
+                };
+            }
+        })();
+
+        class CascadingCornerWave {
+            constructor(canvasId, options = {}) {
                 this.canvas = document.getElementById(canvasId);
                 if (!this.canvas) return;
                 this.ctx = this.canvas.getContext('2d');
-                this.particleCount = particleCount || 55;
-                this.connectionDist = connectionDist || 95;
-                this.particles = [];
-                this.animationFrameId = null;
+                this.noise = new SimplexNoise();
+                this.timeOffset = options.timeOffset || 0;
+                this.xCount = options.xCount || 35;
+                this.yCount = options.yCount || 80;
+                this.timeStep = options.timeStep || 0.01;
+                this.speed = options.speed || 0.0001;
 
                 this.init();
             }
 
             init() {
                 this.resize();
-                window.addEventListener('resize', () => {
-                    this.resize();
-                });
-
-                this.particles = [];
-                for (let i = 0; i < this.particleCount; i++) {
-                    this.particles.push({
-                        x: Math.random() * this.canvas.width,
-                        y: Math.random() * this.canvas.height,
-                        vx: (Math.random() - 0.5) * 0.65,
-                        vy: (Math.random() - 0.5) * 0.65,
-                        radius: Math.random() * 1.5 + 1.2
-                    });
-                }
-
-                this.animate();
+                window.addEventListener('resize', () => this.resize());
+                this.animate = this.animate.bind(this);
+                requestAnimationFrame(this.animate);
             }
 
             resize() {
-                const container = document.querySelector('.invitation-container');
-                const rect = container ? container.getBoundingClientRect() : this.canvas.getBoundingClientRect();
-                this.canvas.width = rect.width || window.innerWidth;
-                this.canvas.height = rect.height || window.innerHeight;
+                const rect = this.canvas.getBoundingClientRect();
+                const dpr = Math.min(window.devicePixelRatio || 1, 2);
+                this.width = rect.width || 320;
+                this.height = rect.height || 200;
+                this.canvas.width = this.width * dpr;
+                this.canvas.height = this.height * dpr;
+                this.ctx.setTransform(1, 0, 0, 1, 0, 0);
+                this.ctx.scale(dpr, dpr);
             }
 
-            // Hitung warna partikel & garis saat ini berdasarkan posisi scroll viewport
-            getCurrentNetworkColor(alpha) {
-                let ratio = 0;
-                if (viewport) {
-                    const currentScroll = viewport.scrollTop;
-                    const contactSection = document.getElementById('section-contact');
-                    const gratitudeSection = document.getElementById('section-gratitude');
+            animate(timestamp) {
+                const ctx = this.ctx;
+                const width = this.width;
+                const height = this.height;
+                const width_half = width / 2;
+                const height_half = height / 2;
 
-                    if (contactSection && gratitudeSection) {
-                        const contactTop = contactSection.offsetTop;
-                        const gratitudeTop = gratitudeSection.offsetTop;
-                        const maxScroll = Math.max(gratitudeTop, contactTop + 1);
+                const TAU = Math.PI * 2;
+                const THIRD = 1 / 3;
+                const TWO_THIRDS = 2 / 3;
+                const ZERO = 0;
+                const ONE = 1;
+                const map = (val, in_min, in_max, out_min, out_max) => (val - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
 
-                        if (currentScroll > contactTop) {
-                            ratio = Math.max(0, Math.min(1, (currentScroll - contactTop) / (maxScroll - contactTop)));
+                // Hitung posisi scroll viewport (0 = paling atas/Cover, 1 = paling bawah/Gratitude)
+                let scrollRatio = 0;
+                const viewportEl = document.getElementById('slidesViewport');
+                if (viewportEl) {
+                    const maxScroll = (viewportEl.scrollHeight - viewportEl.clientHeight) || 1;
+                    scrollRatio = Math.max(0, Math.min(1, viewportEl.scrollTop / maxScroll));
+                }
+
+                // Interpolasi Warna: Merah Anggun BSA di awal -> Hitam di paling bawah (tidak terlalu pekat)
+                // Color A: dari Merah Utama BSA Primary-6 (#e50101 -> 229, 1, 1) ke Hitam (#0f0f0f -> 15, 15, 15)
+                const rA = Math.round(229 + (15 - 229) * scrollRatio);
+                const gA = Math.round(1 + (15 - 1) * scrollRatio);
+                const bA = Math.round(1 + (15 - 1) * scrollRatio);
+                const colorA = `rgba(${rA}, ${gA}, ${bA}, ${0.85 - 0.05 * scrollRatio})`;
+
+                // Color B: dari Merah Anggun BSA Secondary-5 (#ab2e2f -> 171, 46, 47) ke Hitam (#000000 -> 0, 0, 0)
+                const rB = Math.round(171 + (0 - 171) * scrollRatio);
+                const gB = Math.round(46 + (0 - 46) * scrollRatio);
+                const bB = Math.round(47 + (0 - 47) * scrollRatio);
+                const colorB = `rgba(${rB}, ${gB}, ${bB}, ${0.75 - 0.05 * scrollRatio})`;
+
+                // Color C: dari Merah Terang Lembut BSA Primary-4 (#ef5f5f -> 239, 95, 95) ke Hitam (#050505 -> 5, 5, 5)
+                const rC = Math.round(239 + (5 - 239) * scrollRatio);
+                const gC = Math.round(95 + (5 - 95) * scrollRatio);
+                const bC = Math.round(95 + (5 - 95) * scrollRatio);
+                const colorC = `rgba(${rC}, ${gC}, ${bC}, ${0.80 - 0.05 * scrollRatio})`;
+
+                // Highlight stroke: dari Rose-Red Glow lembut (255, 175, 175) saat di atas, ke Hitam (0, 0, 0) saat di bawah
+                // Memberikan pendar translusen anggun, tidak membuat pekat kaku
+                const hlR = Math.round(255 + (0 - 255) * scrollRatio);
+                const hlG = Math.round(175 + (0 - 175) * scrollRatio);
+                const hlB = Math.round(175 + (0 - 175) * scrollRatio);
+                const highlightColor = `rgba(${hlR}, ${hlG}, ${hlB}, ${0.70 + 0.15 * scrollRatio})`;
+
+                let xCount = this.xCount;
+                let yCount = this.yCount;
+                let iXCount = 1 / (xCount - 1);
+                let iYCount = 1 / (yCount - 1);
+                let time = (timestamp + this.timeOffset) * this.speed;
+                let timeStep = this.timeStep;
+
+                ctx.save();
+                // Clear frame transparan
+                ctx.clearRect(0, 0, width, height);
+
+                // Origin at center
+                ctx.translate(width_half, height_half);
+
+                let grad = ctx.createLinearGradient(-width, 0, width, height);
+                let t = time % 1;
+                grad.addColorStop(map(t, 0, 1, THIRD, ZERO), colorA);
+                grad.addColorStop(map(t, 0, 1, TWO_THIRDS, THIRD), colorB);
+                grad.addColorStop(map(t, 0, 1, ONE, TWO_THIRDS), colorC);
+
+                // Multi-layered parametric simplex wave lines
+                ctx.beginPath();
+                for (let j = 0; j < yCount; j++) {
+                    let tj = j * iYCount;
+                    let c = Math.cos(tj * TAU + time) * 0.1;
+                    for (let i = 0; i < xCount; i++) {
+                        let ti = i * iXCount;
+                        let n = this.noise.noise3D(ti, time, c);
+                        let y = n * height_half;
+                        let x = ti * (width + 120) - width_half - 60;
+                        if (i === 0) {
+                            ctx.moveTo(x, y);
                         } else {
-                            ratio = 0;
-                        }
-                    } else {
-                        const maxScroll = (viewport.scrollHeight - viewport.clientHeight) || 1;
-                        const scrollRatio = currentScroll / maxScroll;
-                        if (scrollRatio > 0.65) {
-                            ratio = Math.min(1, (scrollRatio - 0.65) / 0.35);
+                            ctx.lineTo(x, y);
                         }
                     }
+                    time += timeStep;
                 }
 
-                // Interpolate: BSA Secondary-5 (171, 46, 47) to BSA Secondary-10 (69, 0, 0)
-                const r = Math.round(171 + (69 - 171) * ratio);
-                const g = Math.round(46 + (0 - 46) * ratio);
-                const b = Math.round(47 + (0 - 47) * ratio);
-                return `rgba(${r}, ${g}, ${b}, ${alpha.toFixed(2)})`;
-            }
+                // Di atas (background gelap): gunakan 'lighter' agar berdimensi pendar cahaya anggun
+                // Di bawah (background merah solid): gunakan 'source-over' agar hitam tegas terlihat di atas merah
+                ctx.globalCompositeOperation = scrollRatio > 0.45 ? 'source-over' : 'lighter';
 
-            animate() {
-                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                ctx.filter = 'blur(0px)';
+                ctx.strokeStyle = grad;
+                ctx.lineWidth = 2.6;
+                ctx.stroke();
 
-                const pColor = this.getCurrentNetworkColor(0.85);
+                ctx.filter = 'blur(0px)';
+                ctx.strokeStyle = highlightColor;
+                ctx.lineWidth = 1.0;
+                ctx.stroke();
 
-                // Update & draw particles
-                for (let i = 0; i < this.particles.length; i++) {
-                    const p = this.particles[i];
-                    p.x += p.vx;
-                    p.y += p.vy;
+                ctx.restore();
 
-                    if (p.x < 0 || p.x > this.canvas.width) p.vx *= -1;
-                    if (p.y < 0 || p.y > this.canvas.height) p.vy *= -1;
-
-                    this.ctx.beginPath();
-                    this.ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-                    this.ctx.fillStyle = pColor;
-                    this.ctx.fill();
-
-                    // Connect neighboring particles with line
-                    for (let j = i + 1; j < this.particles.length; j++) {
-                        const p2 = this.particles[j];
-                        const dx = p.x - p2.x;
-                        const dy = p.y - p2.y;
-                        const dist = Math.sqrt(dx * dx + dy * dy);
-
-                        if (dist < this.connectionDist) {
-                            const lineAlpha = (1 - dist / this.connectionDist) * 0.45;
-                            const lineColor = this.getCurrentNetworkColor(lineAlpha);
-
-                            this.ctx.beginPath();
-                            this.ctx.moveTo(p.x, p.y);
-                            this.ctx.lineTo(p2.x, p2.y);
-                            this.ctx.strokeStyle = lineColor;
-                            this.ctx.lineWidth = 0.85;
-                            this.ctx.stroke();
-                        }
-                    }
-                }
-
-                this.animationFrameId = requestAnimationFrame(() => this.animate());
+                requestAnimationFrame(this.animate);
             }
         }
 
-        // Initialize particle network on fullscreen canvas
+        // Inisialisasi gelombang di Pojok Kanan Atas dan Pojok Kiri Bawah Layar
         window.addEventListener('DOMContentLoaded', () => {
-            new FullscreenParticleNetwork('particleCanvas', 52, 95);
+            new CascadingCornerWave('waveCanvasTopRight', {
+                timeOffset: 0,
+                xCount: 35,
+                yCount: 80,
+                timeStep: 0.01,
+                speed: 0.0001
+            });
+
+            new CascadingCornerWave('waveCanvasBottomLeft', {
+                timeOffset: 4800,
+                xCount: 35,
+                yCount: 80,
+                timeStep: 0.01,
+                speed: 0.0001
+            });
         });
     </script>
 
